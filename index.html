@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daftar Penghuni Rusunawa</title>
+  <style>
+    :root{--bg:#f7f7f8;--card:#ffffff;--muted:#6b7280;--accent:#111827}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+    body{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:32px}
+    .wrap{width:100%;max-width:1100px}
+    .card{background:var(--card);border-radius:12px;box-shadow:0 6px 18px rgba(16,24,40,0.06);padding:18px}
+
+    .top{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .title{font-size:18px;font-weight:600;color:var(--accent)}
+    .controls{display:flex;gap:8px;align-items:center}
+
+    input.search{padding:10px 12px;border-radius:10px;border:1px solid #e6e7eb;min-width:260px;outline:none}
+    input.search:focus{box-shadow:0 0 0 3px rgba(100,116,139,0.08)}
+
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    thead th{position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#fbfbfc);text-align:left;padding:10px 12px;color:var(--muted);font-weight:600;border-bottom:1px solid #eef0f3}
+    tbody tr{background:transparent}
+    tbody tr:nth-child(even){background:#fbfbfd}
+    td{padding:10px 12px;border-bottom:1px dashed #eef0f3;color:#111827}
+
+    .small{font-size:12px;color:var(--muted)}
+    .no-results{padding:36px;text-align:center;color:var(--muted)}
+
+    .meta{font-size:12px;color:var(--muted)}
+    .actions{display:flex;gap:8px}
+
+    button.clear{background:transparent;border:1px solid #e6e7eb;padding:8px 10px;border-radius:8px;font-size:13px}
+
+    @media (max-width:720px){
+      .top{flex-direction:column;align-items:stretch}
+      input.search{width:100%}
+      td, th{padding:10px 8px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <div>
+          <div class="title">Daftar Penghuni Rusunawa</div>
+          <div class="meta">silahkan ketik no unit pada kolom samping</div>
+        </div>
+        <div class="controls">
+          <input id="search" class="search" placeholder="Cari nama, unit, atau kata kunci..." />
+          <button id="clear" class="clear">Bersihkan</button>
+        </div>
+      </div>
+
+      <div style="overflow:auto;max-height:62vh">
+        <table id="table" aria-describedby="table-desc">
+          <thead id="thead"></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div id="nores" class="no-results" style="display:none">Tidak ada data yang cocok.</div>
+
+    </div>
+  </div>
+
+  <script>
+    /***********************
+     * Data sumber
+     * - Secara default ada contoh data di bawah.
+     * - Jika Anda ingin mengganti dengan data asli (mis. dari file Excel), konversi dulu ke JSON
+     *   dan ganti variabel `data` atau aktifkan fetch ke file JSON eksternal.
+     ***********************/
+
+    // Contoh data (ganti / hapus sesuai kebutuhan)
+    const data = [
+{ "Unit" : "A1.01", "Nama" : "RAHMAD NOOR	", "Telp" : "082354261731" },
+{ "Unit" : "A1.02", "Nama" : "MUHAMMAD RAMLI", "Telp" : "085246405459" },
+{ "Unit" : "A1.03", "Nama" : "FAISAL", "Telp" : "089691926743" },
+{ "Unit" : "A1.04", "Nama" : "ARMINA", "Telp" : "082119726228" },
+{ "Unit" : "A1.05", "Nama" : "MUHAMMAD RIDHO", "Telp" : "082254877754" },
+{ "Unit" : "A1.06", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A1.07", "Nama" : "MAULANA", "Telp" : "085389328213/085845965253" },
+{ "Unit" : "A1.08", "Nama" : "NASRULLAH", "Telp" : "089666395927/082148150937" },
+{ "Unit" : "A1.09", "Nama" : "FAISAL KAMNOOR", "Telp" : "085828333762" },
+{ "Unit" : "A1.10", "Nama" : "SRI NOORLENA", "Telp" : "085932942276" },
+{ "Unit" : "A1.11", "Nama" : "FAISAL", "Telp" : "082213668802" },
+{ "Unit" : "A1.12", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A1.13", "Nama" : "MARIATUL QIBTIAH", "Telp" : "089518065698" },
+{ "Unit" : "A1.14", "Nama" : "SAM'ANI. H", "Telp" : "085332288550" },
+{ "Unit" : "A1.15", "Nama" : "MUHAMMAD SYAIBAN", "Telp" : "089692789332" },
+{ "Unit" : "A1.16", "Nama" : "SWANTHO TJITRO WANDIRA", "Telp" : "085348483128" },
+{ "Unit" : "A1.17", "Nama" : "RUDI PRASETYO", "Telp" : "082115855170" },
+{ "Unit" : "A1.18", "Nama" : "SYAIFUL ANSYARI", "Telp" : "081549522505/085251761146" },
+{ "Unit" : "A1.19", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A1.20", "Nama" : "RIZKI AKBAR", "Telp" : "083858877525" },
+{ "Unit" : "A1.21", "Nama" : "AHMAD NAWAWI", "Telp" : "085349948858" },
+{ "Unit" : "A1.22", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A1.23", "Nama" : "AHMAD NUR MAULIDI", "Telp" : "0895700552371" },
+{ "Unit" : "A1.24", "Nama" : "MUHAMMAD MASRAWI", "Telp" : "081253533398" },
+{ "Unit" : "A2.01", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A2.02", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A2.03", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A2.04", "Nama" : "BADARRUDIN", "Telp" : "081649316520" },
+{ "Unit" : "A2.05", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A2.06", "Nama" : "SATIA RAHMAN", "Telp" : "0895612180804" },
+{ "Unit" : "A2.07", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A2.08", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A2.09", "Nama" : "ARBANI YANSAH NOOR", "Telp" : "085249349160" },
+{ "Unit" : "A2.10", "Nama" : "DENNY HENDRA LESMANA", "Telp" : "087840000880" },
+{ "Unit" : "A2.11", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A2.12", "Nama" : "SALMANI", "Telp" : "089653948071/085248048837" },
+{ "Unit" : "A2.13", "Nama" : "ISMAIL", "Telp" : "0895623544600" },
+{ "Unit" : "A2.14", "Nama" : "ANDRE IRANI WANTO", "Telp" : "083823079626" },
+{ "Unit" : "A2.15", "Nama" : "MUHAMMAD HASAN", "Telp" : "08981182127" },
+{ "Unit" : "A2.16", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A2.17", "Nama" : "SITI MISBAH", "Telp" : "085606136662" },
+{ "Unit" : "A2.18", "Nama" : "M. YAMANI", "Telp" : "088242485475" },
+{ "Unit" : "A2.19", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A2.20", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A2.21", "Nama" : "SAINUDDIN", "Telp" : "085787452135/085787452165" },
+{ "Unit" : "A2.22", "Nama" : "M. EDO KASAFANI HIDAYAT", "Telp" : "083138617961" },
+{ "Unit" : "A2.23", "Nama" : "MUHAMMAD RAHIM ASY SYARIFI", "Telp" : "087846716622" },
+{ "Unit" : "A2.24", "Nama" : "MAHDIAN NOOR", "Telp" : "081549247833" },
+{ "Unit" : "A3.01", "Nama" : "ZAINAL ABIDIN", "Telp" : "087724220984" },
+{ "Unit" : "A3.02", "Nama" : "SEPTESA INSAN CAESAR", "Telp" : "087812101832" },
+{ "Unit" : "A3.03", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A3.04", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A3.05", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A3.06", "Nama" : "MUHAMMAD IQBAL", "Telp" : "089517909757" },
+{ "Unit" : "A3.07", "Nama" : "MUHAMMAD SAIROJI", "Telp" : "089525787703" },
+{ "Unit" : "A3.08", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A3.09", "Nama" : "TATI AISYAH", "Telp" : "085752134337" },
+{ "Unit" : "A3.10", "Nama" : "ROYKE ANTONIUS ROOROH", "Telp" : "081349327452" },
+{ "Unit" : "A3.11", "Nama" : "HADIYATULLAH", "Telp" : "TIDAK LENGKAP" },
+{ "Unit" : "A3.12", "Nama" : "SUPRIADI", "Telp" : "082153530827" },
+{ "Unit" : "A3.13", "Nama" : "JUMANANG DEMANG", "Telp" : "087784121423" },
+{ "Unit" : "A3.14", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A3.15", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A3.16", "Nama" : "FATHUR RAHMAN", "Telp" : "083140212886" },
+{ "Unit" : "A3.17", "Nama" : "WAHYUDI HIDAYATULLAH", "Telp" : "085849342395" },
+{ "Unit" : "A3.18", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A3.19", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A3.20", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A3.21", "Nama" : "FAHRUL RAZI S", "Telp" : "081549258024" },
+{ "Unit" : "A3.22", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A3.23", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A3.24", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.01", "Nama" : "HANAPI", "Telp" : "085346949348" },
+{ "Unit" : "A4.02", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.03", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.04", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.05", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.06", "Nama" : "RUSMINNURYADI", "Telp" : "083836017365" },
+{ "Unit" : "A4.07", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.08", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.09", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.10", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.11", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.12", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.13", "Nama" : "FAUZI", "Telp" : "085346949348" },
+{ "Unit" : "A4.14", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.15", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.16", "Nama" : "MARTIN", "Telp" : "083138026513" },
+{ "Unit" : "A4.17", "Nama" : "ERNI", "Telp" : "082154220010" },
+{ "Unit" : "A4.18", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.19", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.20", "Nama" : "SUWARNO", "Telp" : "083141104222" },
+{ "Unit" : "A4.21", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.22", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.23", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "A4.24", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B1.01", "Nama" : "M. ASRUL PAJRIN", "Telp" : "082155540360/082251913232" },
+{ "Unit" : "B1.02", "Nama" : "M. RAHADI", "Telp" : "895329975653" },
+{ "Unit" : "B1.03", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B1.04", "Nama" : "MUHAMMAD RIDUAN", "Telp" : "085705612988" },
+{ "Unit" : "B1.05", "Nama" : "AHMAD ANSARI", "Telp" : "081952524647" },
+{ "Unit" : "B1.06", "Nama" : "SUTARNO", "Telp" : "083135480963" },
+{ "Unit" : "B1.07", "Nama" : "ERWEN DINATA", "Telp" : "082351915334" },
+{ "Unit" : "B1.08", "Nama" : "RUSMALINA", "Telp" : "083137970237" },
+{ "Unit" : "B1.09", "Nama" : "H. AKHYAR RUJANI", "Telp" : "081916287211" },
+{ "Unit" : "B1.10", "Nama" : "WAHYU RAMADHAN", "Telp" : "087836326574/085944615558" },
+{ "Unit" : "B1.11", "Nama" : "AKHMADI", "Telp" : "081254525859/087758953546" },
+{ "Unit" : "B1.12", "Nama" : "M. HERI WAHYUDI", "Telp" : "0882020269891" },
+{ "Unit" : "B1.13", "Nama" : "MAHRITA", "Telp" : "081958436184" },
+{ "Unit" : "B1.14", "Nama" : "PAHRURAJI", "Telp" : "087815934842" },
+{ "Unit" : "B1.15", "Nama" : "M. MUHDI", "Telp" : "087815934842" },
+{ "Unit" : "B1.16", "Nama" : "AIDI ABDILLAH", "Telp" : "087743278496" },
+{ "Unit" : "B1.17", "Nama" : "ERIN WAHYUDI", "Telp" : "TIDAK LENGKAP" },
+{ "Unit" : "B1.18", "Nama" : "AKHMAD SYARIF", "Telp" : "081255556844" },
+{ "Unit" : "B1.19", "Nama" : "ARIF", "Telp" : "085753718172/087710341517" },
+{ "Unit" : "B1.20", "Nama" : "MUHAMMAD", "Telp" : "085252475900/085752349208" },
+{ "Unit" : "B1.21", "Nama" : "MUHAMMAD ANDRE", "Telp" : "089632600050" },
+{ "Unit" : "B1.22", "Nama" : "DEDE MAULANA GANI", "Telp" : "089630917367/083135742238" },
+{ "Unit" : "B1.23", "Nama" : "NOORHAFIZI", "Telp" : "089650782888" },
+{ "Unit" : "B1.24", "Nama" : "RAMLI", "Telp" : "089529063021/0882020826932" },
+{ "Unit" : "B2.01", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B2.02", "Nama" : "MUHAMMAD NOOR", "Telp" : "083143862454" },
+{ "Unit" : "B2.03", "Nama" : "HUSIN", "Telp" : "087795105608" },
+{ "Unit" : "B2.04", "Nama" : "SEPTIANA EKA SAPUTRI", "Telp" : "0895413674732" },
+{ "Unit" : "B2.05", "Nama" : "MUHAMMAD AMIN", "Telp" : "0882008967910" },
+{ "Unit" : "B2.06", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B2.07", "Nama" : "KUSUMO HADI WIJOYO", "Telp" : "TIDAK LENGKAP" },
+{ "Unit" : "B2.08", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B2.09", "Nama" : "MUHAMAD ARIFIN", "Telp" : "083841886621" },
+{ "Unit" : "B2.10", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B2.11", "Nama" : "ABDUL BAHRI", "Telp" : "081251555063" },
+{ "Unit" : "B2.12", "Nama" : "SUBIHI YANNOOR", "Telp" : "085717248938" },
+{ "Unit" : "B2.13", "Nama" : "IRFAN RIZKI FADILLAH", "Telp" : "083159711255" },
+{ "Unit" : "B2.14", "Nama" : "SLAMET DWI PURWANTO", "Telp" : "085776473013" },
+{ "Unit" : "B2.15", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B2.16", "Nama" : "AHMAD RIFQI BADALI", "Telp" : "083801213791" },
+{ "Unit" : "B2.17", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B2.18", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B2.19", "Nama" : "RAHMADI", "Telp" : "087777042117" },
+{ "Unit" : "B2.20", "Nama" : "HERRY", "Telp" : "TIDAK LENGKAP" },
+{ "Unit" : "B2.21", "Nama" : "MULIANA", "Telp" : "085757565260" },
+{ "Unit" : "B2.22", "Nama" : "ABDUL RACHMAN", "Telp" : "085652221520" },
+{ "Unit" : "B2.23", "Nama" : "MUHAMMAD ILYAS", "Telp" : "081251563998/085705201640" },
+{ "Unit" : "B2.24", "Nama" : "EDDY", "Telp" : "08125163706" },
+{ "Unit" : "B3.01", "Nama" : "MAJERIANNOOR", "Telp" : "085787619686" },
+{ "Unit" : "B3.02", "Nama" : "NOOR MEGAWATI", "Telp" : "081528745969" },
+{ "Unit" : "B3.03", "Nama" : "SUPIAN", "Telp" : "082254795109/085349684504" },
+{ "Unit" : "B3.04", "Nama" : "MUHAMMAD YOGI SAPUTRO", "Telp" : "089628546308" },
+{ "Unit" : "B3.05", "Nama" : "FADLI RAHMAN", "Telp" : "089519433567" },
+{ "Unit" : "B3.06", "Nama" : "GALIH DWI KURNIAWAN", "Telp" : "088245357948" },
+{ "Unit" : "B3.07", "Nama" : "AKHMAD", "Telp" : "085251890202" },
+{ "Unit" : "B3.08", "Nama" : "MUHAMMAD IHSAN", "Telp" : "089637179269" },
+{ "Unit" : "B3.09", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B3.10", "Nama" : "M. YUHDI", "Telp" : "081256595300" },
+{ "Unit" : "B3.11", "Nama" : "MUHAMMAD SAIDI", "Telp" : "083140366222/083150772835" },
+{ "Unit" : "B3.12", "Nama" : "SUPIANNOR", "Telp" : "083856200108" },
+{ "Unit" : "B3.13", "Nama" : "FAJERIANSYAH", "Telp" : "085249696432/0895339703820" },
+{ "Unit" : "B3.14", "Nama" : "RAHMATULLAH HAMDI", "Telp" : "083131665608/089699871437" },
+{ "Unit" : "B3.15", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B3.16", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B3.17", "Nama" : "MARIAH", "Telp" : "085247281123" },
+{ "Unit" : "B3.18", "Nama" : "SUPIYANSYAH", "Telp" : "082352701199" },
+{ "Unit" : "B3.19", "Nama" : "M. ARDIANI", "Telp" : "085251698883" },
+{ "Unit" : "B3.20", "Nama" : "MISRANI", "Telp" : "082245370231" },
+{ "Unit" : "B3.21", "Nama" : "SUHAIMI", "Telp" : "083863004364" },
+{ "Unit" : "B3.22", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B3.23", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B3.24", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B4.01", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B4.02", "Nama" : "SYARWANI", "Telp" : "085106066406" },
+{ "Unit" : "B4.03", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B4.04", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B4.05", "Nama" : "BAHTIAR", "Telp" : "085180938178" },
+{ "Unit" : "B4.06", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B4.07", "Nama" : "AHMAD RIYADI", "Telp" : "081528808809" },
+{ "Unit" : "B4.08", "Nama" : "MUHAMMAD FAJRIANOOR", "Telp" : "083143217326" },
+{ "Unit" : "B4.09", "Nama" : "ZAINUDDIN", "Telp" : "085252629314" },
+{ "Unit" : "B4.10", "Nama" : "MURNIATI", "Telp" : "TIDAK LENGKAP" },
+{ "Unit" : "B4.11", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B4.12", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B4.13", "Nama" : "M. INDRA JAYA", "Telp" : "083176726107" },
+{ "Unit" : "B4.14", "Nama" : "SAIBATUL ASLAMI", "Telp" : "083114752741" },
+{ "Unit" : "B4.15", "Nama" : "WAHYUJI", "Telp" : "081545063515" },
+{ "Unit" : "B4.16", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B4.17", "Nama" : "HUSNI", "Telp" : "085249388668/083114102791" },
+{ "Unit" : "B4.18", "Nama" : "MISRANSYAH", "Telp" : "085346949348" },
+{ "Unit" : "B4.19", "Nama" : "HENDRI LESMANA", "Telp" : "081649050599" },
+{ "Unit" : "B4.20", "Nama" : "AHMAD EFENDI", "Telp" : "085652326675" },
+{ "Unit" : "B4.21", "Nama" : "SURIANSYAH", "Telp" : "089507659430" },
+{ "Unit" : "B4.22", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B4.23", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "B4.24", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C0.01", "Nama" : "LAUW SIN HUN", "Telp" : "085777704668" },
+{ "Unit" : "C0.02", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C0.03", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C1.01", "Nama" : "AHMAD SADIKIN", "Telp" : "081251312186/085924372995" },
+{ "Unit" : "C1.02", "Nama" : "DESIAN HANZARIZKI", "Telp" : "082149310322" },
+{ "Unit" : "C1.03", "Nama" : "IKHMAN RIFALDI", "Telp" : "08970787116/083140602246" },
+{ "Unit" : "C1.04", "Nama" : "RAHMAD", "Telp" : "085939410928" },
+{ "Unit" : "C1.05", "Nama" : "AGATHA GRACE HADI PRATAMA", "Telp" : "08991117129" },
+{ "Unit" : "C1.06", "Nama" : "SURIANSYAH", "Telp" : "0881024796679/089627846699" },
+{ "Unit" : "C1.07", "Nama" : "MUHAMMAD JULIANTO", "Telp" : "085251144999" },
+{ "Unit" : "C1.08", "Nama" : "DWI FITRI YANTO", "Telp" : "TIDAK LENGKAP" },
+{ "Unit" : "C1.09", "Nama" : "RUMAINUR ANWAR FUAN", "Telp" : "085250800454" },
+{ "Unit" : "C1.10", "Nama" : "MOCHAMAD SULKAN", "Telp" : "085251164182" },
+{ "Unit" : "C1.11", "Nama" : "ANANDA RIZKY PERDANA", "Telp" : "0895366374240" },
+{ "Unit" : "C1.12", "Nama" : "MUHAMMAD ARBAIN", "Telp" : "089676768427" },
+{ "Unit" : "C1.13", "Nama" : "MA'RUP", "Telp" : "083160371134" },
+{ "Unit" : "C1.14", "Nama" : "FITRIYANA", "Telp" : "088242127190" },
+{ "Unit" : "C1.15", "Nama" : "RAHMAN", "Telp" : "082150634757" },
+{ "Unit" : "C1.16", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C1.17", "Nama" : "ROSITA", "Telp" : "082354487993" },
+{ "Unit" : "C1.18", "Nama" : "ZULKIFLI", "Telp" : "089616098748" },
+{ "Unit" : "C1.19", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C1.20", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C1.21", "Nama" : "DEWO A. BAHRUDIN", "Telp" : "083824523850" },
+{ "Unit" : "C1.22", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C1.23", "Nama" : "MUHAMMAD GUNTUR", "Telp" : "085750797999" },
+{ "Unit" : "C1.24", "Nama" : "MUHAMMAD SAFRUDIN, S.KOM", "Telp" : "089512850979" },
+{ "Unit" : "C2.01", "Nama" : "RIKI YANDRA", "Telp" : "083174993428/083114857132" },
+{ "Unit" : "C2.02", "Nama" : "AKHMAD RAMALI", "Telp" : "085245598016" },
+{ "Unit" : "C2.03", "Nama" : "ISMU HANSAH", "Telp" : "0895321516111" },
+{ "Unit" : "C2.04", "Nama" : "NOR HAIRI", "Telp" : "089508401750" },
+{ "Unit" : "C2.05", "Nama" : "RONI", "Telp" : "082253648183" },
+{ "Unit" : "C2.06", "Nama" : "MUHAMMAD RIDHANI", "Telp" : "087846353619/087710367521" },
+{ "Unit" : "C2.07", "Nama" : "SYARIPUDIN", "Telp" : "089699870888" },
+{ "Unit" : "C2.08", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C2.09", "Nama" : "FERIYADIE, SE", "Telp" : "08515262204" },
+{ "Unit" : "C2.10", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C2.11", "Nama" : "SYAHRONI", "Telp" : "083872867075/083150497001" },
+{ "Unit" : "C2.12", "Nama" : "EDDY JULIS", "Telp" : "085248088686" },
+{ "Unit" : "C2.13", "Nama" : "MUHAMMAD SALEH", "Telp" : "083817226439" },
+{ "Unit" : "C2.14", "Nama" : "HAIRIANI", "Telp" : "083119118196" },
+{ "Unit" : "C2.15", "Nama" : "MIRZA APRIZALDI", "Telp" : "082155328510" },
+{ "Unit" : "C2.16", "Nama" : "ALIANSYAH", "Telp" : "083854172470" },
+{ "Unit" : "C2.17", "Nama" : "KANCEL", "Telp" : "08875690923" },
+{ "Unit" : "C2.18", "Nama" : "ASRA", "Telp" : "085348680098" },
+{ "Unit" : "C2.19", "Nama" : "BAHRUL HADI", "Telp" : "087812357921/085203854477" },
+{ "Unit" : "C2.20", "Nama" : "SARBANI", "Telp" : "083193029378" },
+{ "Unit" : "C2.21", "Nama" : "ABDUL GANI", "Telp" : "081258432095" },
+{ "Unit" : "C2.22", "Nama" : "BERRY CHRISTIAN HERLIJANTO", "Telp" : "085102590288/08503356543" },
+{ "Unit" : "C2.23", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C2.24", "Nama" : "ISMAIL", "Telp" : "087715555214" },
+{ "Unit" : "C3.01", "Nama" : "JUHRAINI", "Telp" : "082256470207" },
+{ "Unit" : "C3.02", "Nama" : "MUHAMMAD PATHOR RAHMAN", "Telp" : "085820253150" },
+{ "Unit" : "C3.03", "Nama" : "PURWANTO", "Telp" : "0882021844193" },
+{ "Unit" : "C3.04", "Nama" : "M. IDRIS", "Telp" : "081346386688" },
+{ "Unit" : "C3.05", "Nama" : "TISNA SANUSI", "Telp" : "085753929956" },
+{ "Unit" : "C3.06", "Nama" : "SURDANI", "Telp" : "089634573649" },
+{ "Unit" : "C3.07", "Nama" : "MUHAMMAD YAMIN", "Telp" : "083862496906" },
+{ "Unit" : "C3.08", "Nama" : "MURDANI", "Telp" : "082253710568" },
+{ "Unit" : "C3.09", "Nama" : "AULIA RAHMAN", "Telp" : "083159723169" },
+{ "Unit" : "C3.10", "Nama" : "ANSUR RULLAH", "Telp" : "085333343937" },
+{ "Unit" : "C3.11", "Nama" : "RAHMADI", "Telp" : "083824192233" },
+{ "Unit" : "C3.12", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C3.13", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C3.14", "Nama" : "RIDUAN NOR", "Telp" : "0895419750108" },
+{ "Unit" : "C3.15", "Nama" : "AKHMAD WAHYUDI", "Telp" : "085821691116/085751117483" },
+{ "Unit" : "C3.16", "Nama" : "HASRUL", "Telp" : "081350701777" },
+{ "Unit" : "C3.17", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C3.18", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C3.19", "Nama" : "SANUSI", "Telp" : "085248805451" },
+{ "Unit" : "C3.20", "Nama" : "DARMAYANTO", "Telp" : "081253931121/081450387952" },
+{ "Unit" : "C3.21", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C3.22", "Nama" : "RAHMAT", "Telp" : "08977267580" },
+{ "Unit" : "C3.23", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C3.24", "Nama" : "SARLAN", "Telp" : "087850019326" },
+{ "Unit" : "C4.01", "Nama" : "ABDUL RASUL", "Telp" : "085108468383" },
+{ "Unit" : "C4.02", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C4.03", "Nama" : "ADITYA", "Telp" : "0895340511677" },
+{ "Unit" : "C4.04", "Nama" : "AHMAD SURYANI", "Telp" : "0895340508760" },
+{ "Unit" : "C4.05", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C4.06", "Nama" : "ALFIAN NOOR", "Telp" : "081254260458" },
+{ "Unit" : "C4.07", "Nama" : "RAHMANSYAH", "Telp" : "083844008724" },
+{ "Unit" : "C4.08", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C4.09", "Nama" : "GT. RIZAL JULIANTO", "Telp" : "081348265265" },
+{ "Unit" : "C4.10", "Nama" : "HARLI", "Telp" : "081903209059" },
+{ "Unit" : "C4.11", "Nama" : "TAUFIKURAHMAN", "Telp" : "085347320766" },
+{ "Unit" : "C4.12", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C4.13", "Nama" : "ABDUL MAJID", "Telp" : "083816051649" },
+{ "Unit" : "C4.14", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C4.15", "Nama" : "RAHMADI", "Telp" : "085651900068" },
+{ "Unit" : "C4.16", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "C4.17", "Nama" : "GARIN RUSMAN AJI", "Telp" : "081545380183" },
+{ "Unit" : "C4.18", "Nama" : "HARIS SOFYAN", "Telp" : "TIDAK LENGKAP" },
+{ "Unit" : "C4.19", "Nama" : "RAMINA", "Telp" : "085650805731" },
+{ "Unit" : "C4.20", "Nama" : "AKHMAD KHAIDIR", "Telp" : "081255964593" },
+{ "Unit" : "C4.21", "Nama" : "RAHMADANI", "Telp" : "085156645589" },
+{ "Unit" : "C4.22", "Nama" : "ZUHAIDA", "Telp" : "083117768746" },
+{ "Unit" : "C4.23", "Nama" : "SAYUTI", "Telp" : "08978184443" },
+{ "Unit" : "C4.24", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "101", "Nama" : "RUDI", "Telp" : "085777111635/085828343943" },
+{ "Unit" : "102", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "103", "Nama" : "BAIHAKI H.", "Telp" : "087836461117" },
+{ "Unit" : "104", "Nama" : "JOKO SANTOSO", "Telp" : "081351314485" },
+{ "Unit" : "105", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "106", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "107", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "108", "Nama" : "NANANG", "Telp" : "081952316462" },
+{ "Unit" : "109", "Nama" : "ARIF SYAKHBANA IERAF", "Telp" : "085754205008/085933523255" },
+{ "Unit" : "110", "Nama" : "ANJAS ISMAIL", "Telp" : "081553364494" },
+{ "Unit" : "201", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "202", "Nama" : "MASITAH", "Telp" : "081349282774" },
+{ "Unit" : "203", "Nama" : "ABDUL KHAIR", "Telp" : "0895414064165" },
+{ "Unit" : "204", "Nama" : "MUHAMMAD AGUS BUDIANTO", "Telp" : "087841048177" },
+{ "Unit" : "205", "Nama" : "H. HALIS", "Telp" : "089518036581" },
+{ "Unit" : "206", "Nama" : "SAFRUDI, S.PD", "Telp" : "089691451610" },
+{ "Unit" : "207", "Nama" : "ARBANI", "Telp" : "081350662526" },
+{ "Unit" : "208", "Nama" : "MUHAMMAD FIKRI AZHARI", "Telp" : "081251515522" },
+{ "Unit" : "209", "Nama" : "RINDRA ADRIANDI", "Telp" : "082148551895" },
+{ "Unit" : "210", "Nama" : "MUHAMMAD SALIM", "Telp" : "089636320527" },
+{ "Unit" : "211", "Nama" : "GUSTI MAULANA SIDIK", "Telp" : "081341833869" },
+{ "Unit" : "212", "Nama" : "MUHAMMAD ROBBY FAUZAN", "Telp" : "087883503634" },
+{ "Unit" : "213", "Nama" : "AHMAD JAINUDDIN", "Telp" : "082159068294" },
+{ "Unit" : "214", "Nama" : "MUHAMMAD ARI MAULANA KUSUMA", "Telp" : "085930239024/0895411317670" },
+{ "Unit" : "215", "Nama" : "SAUGIE ZULFIKAR", "Telp" : "" },
+{ "Unit" : "216", "Nama" : "RIFQI MUHARRAM", "Telp" : "089690928707" },
+{ "Unit" : "301", "Nama" : "GT. MUHAMMAD RIZAL PERDANA", "Telp" : "082255820445/089691413411" },
+{ "Unit" : "302", "Nama" : "AIMAIDHA", "Telp" : "089691897142" },
+{ "Unit" : "303", "Nama" : "AULIA RAHMAN", "Telp" : "085387262789" },
+{ "Unit" : "304", "Nama" : "TONY AZRIN", "Telp" : "089602571191" },
+{ "Unit" : "305", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "306", "Nama" : "ROFIIN NOOR", "Telp" : "089674060979" },
+{ "Unit" : "307", "Nama" : "M. KASMAN", "Telp" : "085757821042/0882021720025" },
+{ "Unit" : "308", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "309", "Nama" : "YA'KUB", "Telp" : "087766776767/081952316161" },
+{ "Unit" : "310", "Nama" : "MUHAMMAD YUNUS", "Telp" : "083867433259" },
+{ "Unit" : "311", "Nama" : "MUHAMMAD RIFAI'E", "Telp" : "082147558244" },
+{ "Unit" : "312", "Nama" : "MUHAMMAD SYARWANI ABDAN", "Telp" : "085388683495" },
+{ "Unit" : "313", "Nama" : "RINTO", "Telp" : "081256440800/082150350459" },
+{ "Unit" : "314", "Nama" : "SYARIFUDDIN", "Telp" : "08991138082" },
+{ "Unit" : "315", "Nama" : "ZULKIFLI", "Telp" : "085348930621" },
+{ "Unit" : "316", "Nama" : "MUHAMMAD HANAFI", "Telp" : "082221779101" },
+{ "Unit" : "401", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "402", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "403", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "404", "Nama" : "UMMU KHOFIATUN", "Telp" : "085790636783" },
+{ "Unit" : "405", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "406", "Nama" : "KAMAL HUDA", "Telp" : "081649066572" },
+{ "Unit" : "407", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "408", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "409", "Nama" : "FAUSI", "Telp" : "085389772008" },
+{ "Unit" : "410", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "411", "Nama" : "ARMAIN", "Telp" : "085828224861" },
+{ "Unit" : "412", "Nama" : "RUDI FAUZIE", "Telp" : "088801186421/085652101604" },
+{ "Unit" : "413", "Nama" : " ", "Telp" : "" },
+{ "Unit" : "414", "Nama" : "ARDIANSYAH", "Telp" : "085252509376" },
+{ "Unit" : "415", "Nama" : "NORDIANA", "Telp" : "085652146250" },
+{ "Unit" : "416", "Nama" : "MUHAMMAD IKBAL", "Telp" : "083119244901" },
+
+
+
+
+
+    ];
+
+    // Jika Anda sudah punya file JSON di server (mis: data_penghuni.json), aktifkan fetch ini:
+    // fetch('data_penghuni.json').then(r=>r.json()).then(d=>init(d)).catch(()=>init(data));
+    // Untuk demo kita langsung inisialisasi dari variabel data
+
+    init(data);
+
+    function init(rows){
+      // Normalize keys order: gunakan keys dari baris pertama
+      const keys = rows.length ? Object.keys(rows[0]) : [];
+      renderHeader(keys);
+      renderRows(rows, keys);
+
+      const searchInput = document.getElementById('search');
+      const clearBtn = document.getElementById('clear');
+
+      searchInput.addEventListener('input', e => {
+        const q = e.target.value.trim().toLowerCase();
+        const filtered = rows.filter(r => {
+          return keys.some(k => String(r[k] || '').toLowerCase().includes(q));
+        });
+        renderRows(filtered, keys);
+      });
+
+      clearBtn.addEventListener('click', ()=>{
+        searchInput.value = '';
+        renderRows(rows, keys);
+        searchInput.focus();
+      });
+    }
+
+    function renderHeader(keys){
+      const thead = document.getElementById('thead');
+      thead.innerHTML = '';
+      const tr = document.createElement('tr');
+      keys.forEach(k=>{
+        const th = document.createElement('th');
+        th.textContent = k;
+        th.style.cursor = 'pointer';
+        th.title = 'Klik untuk mengurutkan';
+        th.dataset.key = k;
+        th.dataset.dir = 'none';
+        th.addEventListener('click', onSortHeader);
+        tr.appendChild(th);
+      });
+      thead.appendChild(tr);
+    }
+
+    function renderRows(rows, keys){
+      const tbody = document.getElementById('tbody');
+      const nores = document.getElementById('nores');
+      tbody.innerHTML = '';
+      if(!rows.length){
+        nores.style.display = 'block';
+        return;
+      }
+      nores.style.display = 'none';
+
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        keys.forEach(k=>{
+          const td = document.createElement('td');
+          const v = r[k] === undefined || r[k] === null ? '' : r[k];
+          td.innerHTML = escapeHtml(String(v));
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    function onSortHeader(e){
+      const th = e.currentTarget;
+      const key = th.dataset.key;
+      const dir = th.dataset.dir === 'asc' ? 'desc' : 'asc';
+      // reset other headers
+      document.querySelectorAll('thead th').forEach(x=>{x.dataset.dir = 'none'});
+      th.dataset.dir = dir;
+
+      // get current visible rows from tbody
+      const tbody = document.getElementById('tbody');
+      const rows = Array.from(tbody.querySelectorAll('tr')).map(tr=>{
+        const obj = {};
+        Array.from(tr.children).forEach((td,i)=>{
+          const header = document.querySelectorAll('thead th')[i].dataset.key;
+          obj[header] = td.textContent;
+        });
+        return obj;
+      });
+
+      rows.sort((a,b)=>{
+        const A = (a[key]||'').toString().toLowerCase();
+        const B = (b[key]||'').toString().toLowerCase();
+        if(!isNaN(Number(A)) && !isNaN(Number(B))){
+          return dir === 'asc' ? Number(A)-Number(B) : Number(B)-Number(A);
+        }
+        return dir === 'asc' ? A.localeCompare(B) : B.localeCompare(A);
+      });
+
+      // re-render rows preserving header keys order
+      const keys = Array.from(document.querySelectorAll('thead th')).map(h=>h.dataset.key);
+      renderRows(rows, keys);
+    }
+
+    // small helper to avoid XSS
+    function escapeHtml(unsafe) {
+      return unsafe
+           .replace(/&/g, '&amp;')
+           .replace(/</g, '&lt;')
+           .replace(/>/g, '&gt;')
+           .replace(/"/g, '&quot;')
+           .replace(/'/g, '&#039;');
+    }
+
+  </script>
+</body>
+</html>
