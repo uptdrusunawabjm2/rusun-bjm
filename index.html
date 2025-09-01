@@ -15,10 +15,11 @@
       --broken:#dc2626;
     }
     html,body{height:100%;margin:0;font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-    body{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:32px}
+    body{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px}
     .wrap{width:100%;max-width:1200px}
-    .card{background:var(--card);border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,0.05);padding:24px}
+    .card{background:var(--card);border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,0.05);padding:20px}
 
+    /* Header & Controls */
     .top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap}
     .title{font-size:22px;font-weight:700;color:var(--accent)}
     .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
@@ -37,7 +38,7 @@
       border-color:#2563eb;
     }
 
-    /* Ringkasan modern */
+    /* Ringkasan */
     .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:20px}
     .summary-item{border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:6px;color:#fff}
     .summary-item span{font-size:26px;font-weight:700}
@@ -61,6 +62,7 @@
     .occupied{background:var(--occupied)}
     .broken{background:var(--broken)}
 
+    /* Tombol */
     button.clear{
       background:#f3f4f6;
       border:1px solid #e5e7eb;
@@ -72,11 +74,17 @@
     }
     button.clear:hover{background:#e5e7eb}
 
+    /* ✅ Tampilan mobile */
     @media (max-width:720px){
-      .top{flex-direction:column;align-items:stretch}
-      .controls{flex-direction:column;align-items:stretch}
+      body{padding:10px}
+      .top{flex-direction:column;align-items:stretch;gap:16px}
+      .controls{flex-direction:column;align-items:stretch;gap:12px;width:100%}
       input.search, select.filter, button.clear{width:100%}
-      table{font-size:14px}
+      .summary{grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+      .summary-item{padding:12px}
+      .summary-item span{font-size:20px}
+      table{font-size:13px}
+      thead th, td{padding:8px}
     }
   </style>
 </head>
@@ -86,7 +94,7 @@
       <div class="top">
         <div>
           <div class="title">📋 Daftar Penghuni Rusunawa</div>
-          <div class="meta" style="font-size:13px;color:var(--muted)">Cari berdasarkan nama, unit, atau kondisi - UPDATE TANGGAL 01-09-2025</div>
+          <div class="meta" style="font-size:13px;color:var(--muted)">Cari berdasarkan nama, unit, atau kondisi</div>
         </div>
         <div class="controls">
           <input id="search" class="search" placeholder="🔍 Cari data penghuni..." />
@@ -103,6 +111,7 @@
       <!-- Ringkasan kondisi -->
       <div id="summary" class="summary"></div>
 
+      <!-- Tabel data -->
       <div style="overflow:auto;max-height:62vh">
         <table id="table">
           <thead id="thead"></thead>
@@ -412,7 +421,7 @@
 { "Unit" : "102", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
 { "Unit" : "103", "Nama" : "BAIHAKI H.", "Telp" : "087836461117", "Kondisi Unit" : "Terisi" },
 { "Unit" : "104", "Nama" : "JOKO SANTOSO", "Telp" : "081351314485", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "105", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Unit CONTOH" },
+{ "Unit" : "105", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Unit Contoh" },
 { "Unit" : "106", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
 { "Unit" : "107", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
 { "Unit" : "108", "Nama" : "NANANG", "Telp" : "081952316462", "Kondisi Unit" : "Terisi" },
@@ -466,7 +475,6 @@
 { "Unit" : "414", "Nama" : "ARDIANSYAH", "Telp" : "085252509376", "Kondisi Unit" : "Terisi" },
 { "Unit" : "415", "Nama" : "NORDIANA", "Telp" : "085652146250", "Kondisi Unit" : "Terisi" },
 { "Unit" : "416", "Nama" : "MUHAMMAD IKBAL", "Telp" : "083119244901", "Kondisi Unit" : "Terisi" },
-
 
     ];
 
