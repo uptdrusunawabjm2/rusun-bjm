@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Daftar Penghuni Rusunawa</title>
+  <title>Daftar Penghuni</title>
   <style>
     :root{
       --bg:#0f172a;
@@ -61,6 +61,7 @@
     .summary-ready{background:linear-gradient(135deg,#16a34a,#22c55e)}
     .summary-occupied{background:linear-gradient(135deg,#2563eb,#3b82f6)}
     .summary-broken{background:linear-gradient(135deg,#dc2626,#ef4444)}
+    .summary small{font-size:13px;color:#f1f5f9}
 
     /* Tabel */
     table{width:100%;border-collapse:collapse;font-size:15px;border-radius:12px;overflow:hidden}
@@ -115,7 +116,7 @@
           <div class="meta" style="font-size:13px;color:var(--muted)">Cari berdasarkan nama, unit, atau kondisi - UPDATE 02-09-2025</div>
         </div>
         <div class="controls">
-          <input id="search" class="search" placeholder="Cari data penghuni..." />
+          <input id="search" class="search" placeholder="🔍 Cari data penghuni..." />
           <select id="filter" class="filter">
             <option value="">Semua Kondisi</option>
             <option value="Siap Huni">Siap Huni</option>
@@ -508,34 +509,38 @@
 
       if(dataList.length===0){
         nores.style.display = "block";
-        return;
       } else {
         nores.style.display = "none";
+        dataList.forEach(item=>{
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${item.Unit}</td>
+            <td>${item.Nama || '-'}</td>
+            <td>${item.Telp || '-'}</td>
+            <td><span class="badge ${item["Kondisi Unit"]==='Siap Huni'?'ready':item["Kondisi Unit"]==='Terisi'?'occupied':'broken'}">${item["Kondisi Unit"]}</span></td>
+          `;
+          tbody.appendChild(row);
+        });
       }
 
-      dataList.forEach(item=>{
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${item.Unit}</td>
-          <td>${item.Nama || '-'}</td>
-          <td>${item.Telp || '-'}</td>
-          <td><span class="badge ${item["Kondisi Unit"]==='Siap Huni'?'ready':item["Kondisi Unit"]==='Terisi'?'occupied':'broken'}">${item["Kondisi Unit"]}</span></td>
-        `;
-        tbody.appendChild(row);
-      });
+      renderSummary(dataList);
     }
 
-    function renderSummary(){
-      const total = data.length;
-      const siap = data.filter(d=>d["Kondisi Unit"]==="Siap Huni").length;
-      const terisi = data.filter(d=>d["Kondisi Unit"]==="Terisi").length;
-      const rusak = data.filter(d=>d["Kondisi Unit"]==="Rusak").length;
+    function renderSummary(list){
+      const total = list.length;
+      const siap = list.filter(d=>d["Kondisi Unit"]==="Siap Huni").length;
+      const terisi = list.filter(d=>d["Kondisi Unit"]==="Terisi").length;
+      const rusak = list.filter(d=>d["Kondisi Unit"]==="Rusak").length;
+
+      const siapPct = total? ((siap/total*100).toFixed(1)):0;
+      const terisiPct = total? ((terisi/total*100).toFixed(1)):0;
+      const rusakPct = total? ((rusak/total*100).toFixed(1)):0;
 
       summary.innerHTML = `
-        <div class="summary-item summary-total"><span>${total}</span>Total Unit</div>
-        <div class="summary-item summary-ready"><span>${siap}</span>Siap Huni</div>
-        <div class="summary-item summary-occupied"><span>${terisi}</span>Terisi</div>
-        <div class="summary-item summary-broken"><span>${rusak}</span>Rusak</div>
+        <div class="summary-item summary-total"><span>${total}</span>Total Unit <small>(100%)</small></div>
+        <div class="summary-item summary-ready"><span>${siap}</span>Siap Huni <small>(${siapPct}%)</small></div>
+        <div class="summary-item summary-occupied"><span>${terisi}</span>Terisi <small>(${terisiPct}%)</small></div>
+        <div class="summary-item summary-broken"><span>${rusak}</span>Rusak <small>(${rusakPct}%)</small></div>
       `;
     }
 
@@ -560,7 +565,6 @@
       applyFilters();
     });
 
-    renderSummary();
     renderTable(data);
   </script>
 </body>
