@@ -98,6 +98,14 @@
   .top{flex-direction:column;align-items:stretch;gap:15px}
   .controls{flex-direction:column;align-items:stretch;gap:12px;width:100%}
   input.search{width:100%;min-width:auto;font-size:15px}
+
+  /* ✅ Tambahan perbaikan border pencarian di mobile */
+  input.search{
+    border: 1px solid #475569;
+    border-radius: 12px;
+    box-sizing: border-box;
+  }
+
   select.filter, button.clear{width:100%}
   .summary{grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
   .summary-item{padding:12px}
@@ -105,7 +113,6 @@
   table{font-size:13px}
   thead th, td{padding:8px}
 
-  /* ✅ Tambahan agar judul terlihat di mobile */
   .title{
     font-size:20px;
     text-align:center;
@@ -117,6 +124,7 @@
     margin-bottom:10px;
   }
 }
+
   </style>
 </head>
 <body>
