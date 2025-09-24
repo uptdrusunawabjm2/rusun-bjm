@@ -19,7 +19,6 @@
     .wrap{width:100%;max-width:1200px}
     .card{background:var(--card);border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,0.5);padding:20px}
 
-    /* Header & Controls */
     .top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap}
     .title{font-size:22px;font-weight:700;color:var(--accent)}
     .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
@@ -53,7 +52,6 @@
       transition:0.2s;
     }
 
-    /* Ringkasan */
     .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:20px}
     .summary-item{border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:6px;color:#fff}
     .summary-item span{font-size:26px;font-weight:700}
@@ -63,7 +61,6 @@
     .summary-broken{background:linear-gradient(135deg,#dc2626,#ef4444)}
     .summary small{font-size:13px;color:#f1f5f9}
 
-    /* Tabel */
     table{width:100%;border-collapse:collapse;font-size:15px;border-radius:12px;overflow:hidden}
     thead th{background:#1e293b;text-align:left;padding:12px 14px;color:var(--muted);font-weight:600;border-bottom:2px solid #334155}
     tbody tr:nth-child(even){background:#0f172a}
@@ -73,13 +70,11 @@
 
     .no-results{padding:40px;text-align:center;color:var(--muted);font-size:15px}
 
-    /* Badge kondisi */
     .badge{padding:6px 10px;border-radius:9999px;font-size:13px;font-weight:600;color:#fff;display:inline-block}
     .ready{background:var(--ready)}
     .occupied{background:var(--occupied)}
     .broken{background:var(--broken)}
 
-    /* Tombol */
     button.clear{
       background:#334155;
       border:1px solid #475569;
@@ -92,39 +87,21 @@
     }
     button.clear:hover{background:#475569}
 
-    /* ✅ Tampilan mobile */
     @media (max-width:720px){
-  body{padding:10px}
-  .top{flex-direction:column;align-items:stretch;gap:15px}
-  .controls{flex-direction:column;align-items:stretch;gap:12px;width:100%}
-  input.search{width:100%;min-width:auto;font-size:15px}
-
-  /* ✅ Tambahan perbaikan border pencarian di mobile */
-  input.search{
-    border: 1px solid #475569;
-    border-radius: 12px;
-    box-sizing: border-box;
-  }
-
-  select.filter, button.clear{width:100%}
-  .summary{grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
-  .summary-item{padding:12px}
-  .summary-item span{font-size:20px}
-  table{font-size:13px}
-  thead th, td{padding:8px}
-
-  .title{
-    font-size:20px;
-    text-align:center;
-    margin-bottom:8px;
-  }
-  .meta{
-    text-align:center;
-    display:block;
-    margin-bottom:10px;
-  }
-}
-
+      body{padding:10px}
+      .top{flex-direction:column;align-items:stretch;gap:15px}
+      .controls{flex-direction:column;align-items:stretch;gap:12px;width:100%}
+      input.search{width:100%;min-width:auto;font-size:15px}
+      input.search{border: 1px solid #475569;border-radius: 12px;box-sizing: border-box;}
+      select.filter, button.clear{width:100%}
+      .summary{grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
+      .summary-item{padding:12px}
+      .summary-item span{font-size:20px}
+      table{font-size:13px}
+      thead th, td{padding:8px}
+      .title{font-size:20px;text-align:center;margin-bottom:8px}
+      .meta{text-align:center;display:block;margin-bottom:10px}
+    }
   </style>
 </head>
 <body>
@@ -133,24 +110,34 @@
       <div class="top">
         <div>
           <div class="title">Daftar Penghuni Rusunawa</div>
-          <div class="meta" style="font-size:14px;color:var(--muted)">UPDATE 10-09-2025</div>
+          <div class="meta" style="font-size:14px;color:var(--muted)">UPDATE 25-09-2025</div>
         </div>
         <div class="controls">
           <input id="search" class="search" placeholder="Cari berdasarkan unit, nama, atau kondisi" />
+
           <select id="filter" class="filter">
             <option value="">Semua Kondisi</option>
             <option value="Siap Huni">Siap Huni</option>
             <option value="Terisi">Terisi</option>
             <option value="Rusak">Rusak</option>
           </select>
+
+          <!-- ✅ Filter lokasi rusunawa -->
+          <select id="filterLokasi" class="filter">
+            <option value="">Semua Lokasi</option>
+            <option value="GM-">Ganda Maghfirah</option>
+            <option value="GM-A">Ganda Maghfirah Blok A</option>
+            <option value="GM-B">Ganda Maghfirah Blok B</option>
+            <option value="GM-C">Ganda Maghfirah Blok C</option>
+            <option value="TK-">Teluk Kelayan</option>
+          </select>
+
           <button id="clear" class="clear">Reset</button>
         </div>
       </div>
 
-      <!-- Ringkasan kondisi -->
       <div id="summary" class="summary"></div>
 
-      <!-- Tabel data -->
       <div style="overflow:auto;max-height:62vh">
         <table id="table">
           <thead id="thead"></thead>
@@ -164,7 +151,7 @@
 
   <script>
     const data = [
-      { "Unit" : "GM-A1.01", "Nama" : "RAHMAD NOOR	", "Telp" : "082354261731", "Kondisi Unit" : "Terisi" },
+{ "Unit" : "GM-A1.01", "Nama" : "RAHMAD NOOR	", "Telp" : "082354261731", "Kondisi Unit" : "Terisi" },
 { "Unit" : "GM-A1.02", "Nama" : "MUHAMMAD RAMLI", "Telp" : "085246405459", "Kondisi Unit" : "Terisi" },
 { "Unit" : "GM-A1.03", "Nama" : "FAISAL", "Telp" : "089691926743", "Kondisi Unit" : "Terisi" },
 { "Unit" : "GM-A1.04", "Nama" : "ARMINA", "Telp" : "082119726228", "Kondisi Unit" : "Terisi" },
@@ -513,80 +500,75 @@
 { "Unit" : "TK-414", "Nama" : "ARDIANSYAH", "Telp" : "085252509376", "Kondisi Unit" : "Terisi" },
 { "Unit" : "TK-415", "Nama" : "NORDIANA", "Telp" : "085652146250", "Kondisi Unit" : "Terisi" },
 { "Unit" : "TK-416", "Nama" : "MUHAMMAD IKBAL", "Telp" : "083119244901", "Kondisi Unit" : "Terisi" }
-
     ];
 
-    const thead = document.getElementById("thead");
-    const tbody = document.getElementById("tbody");
-    const search = document.getElementById("search");
-    const filter = document.getElementById("filter");
-    const clear = document.getElementById("clear");
-    const summary = document.getElementById("summary");
-    const nores = document.getElementById("nores");
+    function renderTable(){
+      const searchVal = document.getElementById("search").value.toLowerCase();
+      const filterVal = document.getElementById("filter").value;
+      const lokasiVal = document.getElementById("filterLokasi").value;
 
-    function renderTable(dataList){
-      thead.innerHTML = `<tr><th>Unit</th><th>Nama</th><th>Telp</th><th>Kondisi Unit</th></tr>`;
+      let filtered = data.filter(row => {
+        const matchSearch =
+          row.Unit.toLowerCase().includes(searchVal) ||
+          row.Nama.toLowerCase().includes(searchVal) ||
+          row["Kondisi Unit"].toLowerCase().includes(searchVal);
+
+        const matchFilter = filterVal ? row["Kondisi Unit"] === filterVal : true;
+        const matchLokasi = lokasiVal ? row.Unit.startsWith(lokasiVal) : true;
+
+        return matchSearch && matchFilter && matchLokasi;
+      });
+
+      // ✅ render header tabel
+      const thead = document.getElementById("thead");
+      thead.innerHTML = "<tr><th>Unit</th><th>Nama</th><th>Telp</th><th>Kondisi Unit</th></tr>";
+
+      // ✅ render isi tabel
+      const tbody = document.getElementById("tbody");
       tbody.innerHTML = "";
+      filtered.forEach(row => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${row.Unit}</td>
+            <td>${row.Nama}</td>
+            <td>${row.Telp}</td>
+            <td><span class="badge ${
+              row["Kondisi Unit"] === "Siap Huni" ? "ready" :
+              row["Kondisi Unit"] === "Terisi" ? "occupied" :
+              row["Kondisi Unit"] === "Rusak" ? "broken" : ""
+            }">${row["Kondisi Unit"]}</span></td>
+          </tr>`;
+      });
 
-      if(dataList.length===0){
-        nores.style.display = "block";
-      } else {
-        nores.style.display = "none";
-        dataList.forEach(item=>{
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${item.Unit}</td>
-            <td>${item.Nama || '-'}</td>
-            <td>${item.Telp || '-'}</td>
-            <td><span class="badge ${item["Kondisi Unit"]==='Siap Huni'?'ready':item["Kondisi Unit"]==='Terisi'?'occupied':'broken'}">${item["Kondisi Unit"]}</span></td>
-          `;
-          tbody.appendChild(row);
-        });
-      }
+      // ✅ tampilkan pesan kalau kosong
+      document.getElementById("nores").style.display = filtered.length ? "none" : "block";
 
-      renderSummary(dataList);
-    }
-
-    function renderSummary(list){
-      const total = list.length;
-      const siap = list.filter(d=>d["Kondisi Unit"]==="Siap Huni").length;
-      const terisi = list.filter(d=>d["Kondisi Unit"]==="Terisi").length;
-      const rusak = list.filter(d=>d["Kondisi Unit"]==="Rusak").length;
-
-      const siapPct = total? ((siap/total*100).toFixed(1)):0;
-      const terisiPct = total? ((terisi/total*100).toFixed(1)):0;
-      const rusakPct = total? ((rusak/total*100).toFixed(1)):0;
+      // ✅ render ringkasan kondisi
+      const summary = document.getElementById("summary");
+      const total = filtered.length;
+      const siap = filtered.filter(r=>r["Kondisi Unit"]==="Siap Huni").length;
+      const terisi = filtered.filter(r=>r["Kondisi Unit"]==="Terisi").length;
+      const rusak = filtered.filter(r=>r["Kondisi Unit"]==="Rusak").length;
 
       summary.innerHTML = `
-        <div class="summary-item summary-total"><span>${total}</span>Total Unit <small>(100%)</small></div>
-        <div class="summary-item summary-ready"><span>${siap}</span>Siap Huni <small>(${siapPct}%)</small></div>
-        <div class="summary-item summary-occupied"><span>${terisi}</span>Terisi <small>(${terisiPct}%)</small></div>
-        <div class="summary-item summary-broken"><span>${rusak}</span>Rusak <small>(${rusakPct}%)</small></div>
+        <div class="summary-item summary-total"><span>${total}</span><small>Total Unit</small></div>
+        <div class="summary-item summary-ready"><span>${siap}</span><small>Siap Huni</small></div>
+        <div class="summary-item summary-occupied"><span>${terisi}</span><small>Terisi</small></div>
+        <div class="summary-item summary-broken"><span>${rusak}</span><small>Rusak</small></div>
       `;
     }
 
-    function applyFilters(){
-      const q = search.value.toLowerCase();
-      const f = filter.value;
-
-      const filtered = data.filter(item=>{
-        const matchSearch = item.Unit.toLowerCase().includes(q) || (item.Nama||"").toLowerCase().includes(q) || (item.Telp||"").toLowerCase().includes(q);
-        const matchFilter = f==="" || item["Kondisi Unit"]===f;
-        return matchSearch && matchFilter;
-      });
-
-      renderTable(filtered);
-    }
-
-    search.addEventListener("input",applyFilters);
-    filter.addEventListener("change",applyFilters);
-    clear.addEventListener("click",()=>{
-      search.value="";
-      filter.value="";
-      applyFilters();
+    document.getElementById("search").addEventListener("input", renderTable);
+    document.getElementById("filter").addEventListener("change", renderTable);
+    document.getElementById("filterLokasi").addEventListener("change", renderTable);
+    document.getElementById("clear").addEventListener("click", () => {
+      document.getElementById("search").value = "";
+      document.getElementById("filter").value = "";
+      document.getElementById("filterLokasi").value = "";
+      renderTable();
     });
 
-    renderTable(data);
+    renderTable();
   </script>
 </body>
 </html>
