@@ -91,7 +91,7 @@ render();
 const controller = new AbortController();
 setTimeout(()=>controller.abort(), 8000);
 
-const res = await fetch(GAS_URL + "?action=sheet2", {
+const res = await fetch(GAS_URL + "?action=internal&key=rusun2026", {
   signal: controller.signal
 });
 
@@ -99,18 +99,48 @@ const json = await res.json();
 
 if(!json.status) return;
 
-RAW = json.data.map(r=>({
-Unit: r.unit || "",
-Nama: r.nama || "",
-Telp: r.telp || r["Nomor Telp./HP"] || "",
-"Kondisi Unit": r.kondisi || ""
-}));
+RAW = json.data.map(r=>{
 
+const unit =
+r.unit ||
+r["No. Unit"] ||
+r.Unit ||
+"";
+
+const nama =
+r.nama ||
+r["Nama Penghuni"] ||
+r.Nama ||
+"";
+
+const telp =
+r.telp ||
+r["Nomor Telp./HP"] ||
+r["no telp"] ||
+"";
+
+const kondisi = String(
+r.kondisiunit ||
+r.kondisi ||
+r["Kondisi Unit"] ||
+""
+).trim();
+
+
+return {
+Unit: String(unit).trim(),
+Nama: String(nama).trim(),
+Telp: String(telp).trim(),
+"Kondisi Unit": String(kondisi).trim()
+};
+});
+
+RAW.sort((a,b)=> a.Unit.localeCompare(b.Unit, undefined, {numeric:true}));
 sessionStorage.setItem(CACHE_KEY, JSON.stringify(RAW));
 VIEW = RAW;
 render();
-
-}catch(e){
+}
+catch(e){
 if(e.name === "AbortError"){
 console.warn("Fetch timeout — pakai cache");
 }else{
@@ -118,6 +148,7 @@ console.error("GAS ERROR", e);
 }
 }
 }
+
 
 /* ================= FAST RENDER ================= */
 function render(){
@@ -127,10 +158,12 @@ let total = VIEW.length;
 let terisi = 0, siap = 0, rusak = 0;
 
 for(const d of VIEW){
-if(d["Kondisi Unit"]==="Terisi") terisi++;
-else if(d["Kondisi Unit"]==="Siap Huni") siap++;
-else if(d["Kondisi Unit"]==="Rusak") rusak++;
+const k = String(d["Kondisi Unit"]).toLowerCase();
+if(k.includes("terisi")) terisi++;
+else if(k.includes("siap")) siap++;
+else if(k.includes("rusak")) rusak++;
 }
+
 
 document.getElementById("summary").innerHTML = `
 <div class="box total">TOTAL<br><b>${total}</b></div>
@@ -142,9 +175,12 @@ document.getElementById("summary").innerHTML = `
 let html = "";
 for(const d of VIEW){
 
+const k = String(d["Kondisi Unit"]).toLowerCase();
+
 let cls = "ready";
-if(d["Kondisi Unit"]==="Terisi") cls="occupied";
-if(d["Kondisi Unit"]==="Rusak") cls="broken";
+if(k.includes("terisi")) cls="occupied";
+else if(k.includes("rusak")) cls="broken";
+
 
 html += `<tr>
 <td>${d.Unit}</td>
