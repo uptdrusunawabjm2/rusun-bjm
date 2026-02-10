@@ -7,87 +7,37 @@
 
 <style>
 :root{
---bg:#0f172a;--card:#1e293b;--muted:#94a3b8;--accent:#e2e8f0;
+--bg:#0f172a;--card:#1e293b;--accent:#e2e8f0;
 --ready:#22c55e;--occupied:#3b82f6;--broken:#ef4444}
 body{margin:0;background:var(--bg);font-family:Segoe UI,Arial;color:var(--accent)}
 .wrap{max-width:1200px;margin:auto;padding:16px}
 .card{background:var(--card);border-radius:16px;padding:18px}
-.title{font-size:22px;font-weight:700;margin-bottom:6px}
+.title{font-size:22px;font-weight:700;margin-bottom:10px}
+
 .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-input,select{padding:10px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#e2e8f0}
-table{width:100%;border-collapse:collapse}
-thead th{background:#1e293b;padding:10px;text-align:left}
-td{padding:10px;border-bottom:1px solid #334155}
-.badge{padding:4px 10px;border-radius:999px;font-size:12px;color:#fff}
-.ready{background:var(--ready)}.occupied{background:var(--occupied)}.broken{background:var(--broken)}
+input,select,button{
+padding:10px;border-radius:10px;border:1px solid #334155;
+background:#0f172a;color:#e2e8f0
+}
+button{cursor:pointer}
+button:hover{background:#1e293b}
+
 .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
 .box{padding:12px;border-radius:12px;color:#fff}
 .total{background:#334155}.siap{background:#16a34a}.isi{background:#2563eb}.rusak{background:#dc2626}
 
-/* TABLE LOOK MODERN */
-table{
-border-collapse: collapse;
-}
+table{width:100%;border-collapse:collapse}
+thead th{background:#1e293b;padding:10px;text-align:left}
+td{padding:10px;border-bottom:1px solid #334155}
+tbody tr:hover{background:rgba(255,255,255,0.03)}
 
-tbody tr{
-transition: .15s;
-}
+td:first-child{font-family:monospace;font-weight:600}
+td:nth-child(3){font-family:monospace;color:#cfd8ff}
 
-tbody tr:hover{
-background: rgba(255,255,255,0.03);
-}
-
-/* UNIT TEXT */
-td:first-child{
-font-weight: 600;
-letter-spacing: .5px;
-}
-
-/* PHONE */
-td:nth-child(3){
-font-family: monospace;
-color: #cfd8ff;
-}
-
-/* BADGE STYLE */
-.badge{
-padding: 4px 10px;
-border-radius: 999px;
-font-size: 12px;
-font-weight: 600;
-letter-spacing: .3px;
-}
-
-.badge.occupied{
-background: #2d6cdf;
-}
-
-.badge.ready{
-background: #1aa34a;
-}
-
-.badge.broken{
-background: #e53935;
-}
-
-/* SUMMARY BOX SMOOTH */
-.box{
-transition: .2s;
-}
-.box:hover{
-transform: translateY(-2px);
-}
-
-td{
-text-transform: none;
-}
-
-td:first-child{
-font-weight: 600;
-letter-spacing: .5px;
-font-family: monospace;
-}
-
+.badge{padding:4px 10px;border-radius:999px;font-size:12px;color:#fff}
+.ready{background:var(--ready)}
+.occupied{background:var(--occupied)}
+.broken{background:var(--broken)}
 </style>
 </head>
 
@@ -105,11 +55,14 @@ font-family: monospace;
 <option>Siap Huni</option>
 <option>Rusak</option>
 </select>
+
 <select id="lokasi">
 <option value="">Semua Lokasi</option>
 <option value="GM-">Ganda Maghfirah</option>
 <option value="TK-">Teluk Kelayan</option>
 </select>
+
+<button id="resetBtn">Reset</button>
 </div>
 
 <div id="summary" class="summary"></div>
@@ -132,180 +85,101 @@ font-family: monospace;
 </div>
 
 <script>
-/* ================= CONFIG ================= */
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzjABRVgRaoMj3Y1gCU_DRJpnZIvkGwxRRxmPW6buV1POsQ87GQCLAeEBG5j9jJZux7iQ/exec";
-const CACHE_KEY = "RUSUN_CACHE_V3";
+const GAS_URL="https://script.google.com/macros/s/AKfycbzjABRVgRaoMj3Y1gCU_DRJpnZIvkGwxRRxmPW6buV1POsQ87GQCLAeEBG5j9jJZux7iQ/exec";
+const CACHE_KEY="RUSUN_CACHE_V3";
 
-/* ================= STATE ================= */
-let RAW = [];
-let VIEW = [];
+let RAW=[],VIEW=[];
 
-/* ================= FAST FETCH ================= */
 async function load(){
 try{
+const cache=sessionStorage.getItem(CACHE_KEY);
+if(cache){RAW=JSON.parse(cache);VIEW=RAW;render();}
 
-// ===== CACHE INSTANT LOAD =====
-const cache = sessionStorage.getItem(CACHE_KEY);
-if(cache){
-RAW = JSON.parse(cache);
-VIEW = RAW;
+const controller=new AbortController();
+setTimeout(()=>controller.abort(),8000);
+
+const res=await fetch(GAS_URL+"?action=internal&key=rusun2026",{signal:controller.signal});
+const json=await res.json();
+if(!json.status)return;
+
+const rows=json?.data?.data||[];
+
+RAW=rows.map(r=>({
+Unit:String(r.unit||r["No. Unit"]||r.Unit||"").trim(),
+Nama:String(r.nama||r["Nama Penghuni"]||r.Nama||"").trim(),
+Telp:String(r.telp||r["Nomor Telp./HP"]||"").trim(),
+"Kondisi Unit":String(r.kondisiunit||r.kondisi||r["Kondisi Unit"]||"").trim()
+}));
+
+RAW.sort((a,b)=>a.Unit.localeCompare(b.Unit,undefined,{numeric:true}));
+sessionStorage.setItem(CACHE_KEY,JSON.stringify(RAW));
+VIEW=RAW;
 render();
-}
-
-// ===== BACKGROUND REFRESH =====
-const controller = new AbortController();
-setTimeout(()=>controller.abort(), 8000);
-
-const res = await fetch(GAS_URL + "?action=internal&key=rusun2026", {
-  signal: controller.signal
-});
-
-const json = await res.json();
-
-if(!json.status) return;
-
-const rows = json?.data?.data || [];
-
-RAW = rows.map(r=>{
-
-
-const unit =
-r.unit ||
-r["No. Unit"] ||
-r.Unit ||
-"";
-
-const nama =
-r.nama ||
-r["Nama Penghuni"] ||
-r.Nama ||
-"";
-
-const telp =
-r.telp ||
-r["Nomor Telp./HP"] ||
-r["no telp"] ||
-"";
-
-const kondisi = String(
-r.kondisiunit ?? r.kondisi ?? r["Kondisi Unit"] ?? ""
-).trim();
-
-return {
-Unit: String(unit).trim(),
-Nama: String(nama).trim(),
-Telp: String(telp).trim(),
-"Kondisi Unit": String(kondisi).trim()
-};
-});
-
-RAW.sort((a,b)=> a.Unit.localeCompare(b.Unit, undefined, {numeric:true}));
-sessionStorage.setItem(CACHE_KEY, JSON.stringify(RAW));
-VIEW = RAW;
-render();
-}
-catch(e){
-if(e.name === "AbortError"){
-console.warn("Fetch timeout — pakai cache");
-}else{
-console.error("GAS ERROR", e);
-}
+}catch(e){
+if(e.name!=="AbortError")console.error(e);
 }
 }
 
-
-/* ================= FAST RENDER ================= */
 function render(){
-
-// ===== SUMMARY =====
-let total = VIEW.length;
-let terisi = 0, siap = 0, rusak = 0;
+let total=VIEW.length,terisi=0,siap=0,rusak=0;
 
 for(const d of VIEW){
-let k = String(d["Kondisi Unit"] || "")
-.toLowerCase()
-.replace(/\s+/g," ")
-.trim();
-
-if(k.includes("terisi")) terisi++;
-else if(k.includes("siap")) siap++;
-else if(k.includes("rusak")) rusak++;
-
+const k=d["Kondisi Unit"].toLowerCase();
+if(k.includes("terisi"))terisi++;
+else if(k.includes("siap"))siap++;
+else if(k.includes("rusak"))rusak++;
 }
 
-document.getElementById("summary").innerHTML = `
+document.getElementById("summary").innerHTML=`
 <div class="box total">TOTAL<br><b>${total}</b></div>
 <div class="box isi">TERISI<br><b>${terisi}</b></div>
 <div class="box siap">SIAP<br><b>${siap}</b></div>
 <div class="box rusak">RUSAK<br><b>${rusak}</b></div>`;
 
-// ===== TABLE FAST BUILD (NO REFLOW) =====
-let html = "";
+let html="";
 for(const d of VIEW){
-let k = String(d["Kondisi Unit"] || "")
-.toLowerCase()
-.replace(/\s+/g," ")
-.trim();
+const k=d["Kondisi Unit"].toLowerCase();
+let cls="ready";
+if(k.includes("terisi"))cls="occupied";
+else if(k.includes("rusak"))cls="broken";
 
-let cls = "ready";
-if(k.includes("terisi")) cls="occupied";
-else if(k.includes("rusak")) cls="broken";
-
-
-html += `<tr>
-<td>${String(d.Unit).toUpperCase()}</td>
+html+=`<tr>
+<td>${d.Unit.toUpperCase()}</td>
 <td>${d.Nama}</td>
 <td>${d.Telp}</td>
 <td><span class="badge ${cls}">${d["Kondisi Unit"]}</span></td>
 </tr>`;
 }
-
-document.getElementById("tbody").innerHTML = html;
+document.getElementById("tbody").innerHTML=html;
 }
 
-/* ================= FILTER SUPER CEPAT ================= */
 function applyFilter(){
+const s=document.getElementById("search").value.toLowerCase();
+const f=document.getElementById("filter").value.toLowerCase();
+const l=document.getElementById("lokasi").value;
 
-const s = document.getElementById("search").value.toLowerCase();
-const f = document.getElementById("filter").value;
-const l = document.getElementById("lokasi").value;
-
-VIEW = RAW.filter(d=>{
-
-if(f){
-const dk = String(d["Kondisi Unit"] || "")
-.toLowerCase()
-.replace(/\s+/g," ")
-.trim();
-
-const fk = String(f || "")
-.toLowerCase()
-.replace(/\s+/g," ")
-.trim();
-
-if(dk !== fk) return false;
-}
-
-if(l && !d.Unit.startsWith(l)) return false;
-
-if(!s) return true;
-return (
-d.Unit.toLowerCase().includes(s) ||
-d.Nama.toLowerCase().includes(s)
-);
+VIEW=RAW.filter(d=>{
+if(f&&!d["Kondisi Unit"].toLowerCase().includes(f))return false;
+if(l&&!d.Unit.toUpperCase().startsWith(l))return false;
+if(!s)return true;
+return d.Unit.toLowerCase().includes(s)||d.Nama.toLowerCase().includes(s);
 });
-
 render();
 }
 
-/* ================= EVENTS ================= */
-document.getElementById("search").oninput = applyFilter;
-document.getElementById("filter").onchange = applyFilter;
-document.getElementById("lokasi").onchange = applyFilter;
+document.getElementById("search").oninput=applyFilter;
+document.getElementById("filter").onchange=applyFilter;
+document.getElementById("lokasi").onchange=applyFilter;
 
-/* ================= START ================= */
+document.getElementById("resetBtn").onclick=()=>{
+document.getElementById("search").value="";
+document.getElementById("filter").value="";
+document.getElementById("lokasi").value="";
+VIEW=RAW;
+render();
+};
+
 load();
 </script>
-
 </body>
 </html>
