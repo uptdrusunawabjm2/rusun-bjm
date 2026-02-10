@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Daftar Penghuni</title>
+<title>Daftar Penghuni Rusunawa</title>
 
 <style>
 :root{
@@ -141,6 +141,44 @@ max-width:140px;
 white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis;
+}
+
+/* ===== SAMAKAN FIELD SEARCH / FILTER / RESET ===== */
+
+.controls input,
+.controls select,
+.controls button{
+width:100%;
+box-sizing:border-box;
+height:44px;
+padding:10px 12px;
+border-radius:12px;
+border:1px solid #334155;
+background:#0f172a;
+color:#e2e8f0;
+font-size:14px;
+outline:none;
+}
+
+.controls input:focus,
+.controls select:focus{
+border-color:#3b82f6;
+box-shadow:0 0 0 1px #3b82f6;
+}
+
+#resetBtn{
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:600;
+letter-spacing:.3px;
+}
+
+.controls input,
+.controls select{
+appearance:none;
+-webkit-appearance:none;
+-moz-appearance:none;
 }
 
 }
