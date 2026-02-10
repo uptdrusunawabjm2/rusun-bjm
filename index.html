@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Daftar Penghuni Rusunawa</title>
+<title>Daftar Penghuni</title>
 
 <style>
 :root{
@@ -38,6 +38,113 @@ td:nth-child(3){font-family:monospace;color:#cfd8ff}
 .ready{background:var(--ready)}
 .occupied{background:var(--occupied)}
 .broken{background:var(--broken)}
+
+/* ================= TEXT STYLE SERAGAM ================= */
+
+body{
+font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.title{
+letter-spacing:.3px;
+}
+
+td, th{
+font-size:14px;
+}
+
+td:first-child{
+text-transform:uppercase;
+letter-spacing:.6px;
+}
+
+td:nth-child(2){
+font-weight:500;
+}
+
+td:nth-child(3){
+font-family:monospace;
+}
+
+.badge{
+font-weight:600;
+letter-spacing:.4px;
+}
+
+
+/* ================= MOBILE RESPONSIVE ================= */
+
+@media (max-width: 720px){
+
+.wrap{
+padding:10px;
+}
+
+.card{
+padding:12px;
+border-radius:12px;
+}
+
+.title{
+font-size:18px;
+text-align:center;
+}
+
+.controls{
+flex-direction:column;
+gap:8px;
+}
+
+input, select, button{
+width:100%;
+font-size:14px;
+padding:10px;
+}
+
+.summary{
+grid-template-columns:repeat(2,1fr);
+gap:8px;
+}
+
+.box{
+padding:10px;
+font-size:13px;
+text-align:center;
+}
+
+table{
+font-size:13px;
+}
+
+thead{
+position:sticky;
+top:0;
+z-index:5;
+}
+
+td, th{
+padding:8px;
+}
+
+td:nth-child(3){
+font-size:12px;
+}
+
+/* SCROLL TABLE MOBILE */
+.table-wrap{
+overflow-x:auto;
+}
+
+/* Optional: nama dipotong rapi */
+td:nth-child(2){
+max-width:140px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+}
+
 </style>
 </head>
 
@@ -67,7 +174,7 @@ td:nth-child(3){font-family:monospace;color:#cfd8ff}
 
 <div id="summary" class="summary"></div>
 
-<div style="max-height:65vh;overflow:auto">
+<div class="table-wrap" style="max-height:65vh;overflow:auto">
 <table>
 <thead>
 <tr>
