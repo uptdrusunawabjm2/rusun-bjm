@@ -1,574 +1,192 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Daftar Penghuni</title>
-  <style>
-    :root{
-      --bg:#0f172a;
-      --card:#1e293b;
-      --muted:#94a3b8;
-      --accent:#e2e8f0;
-      --ready:#22c55e;
-      --occupied:#3b82f6;
-      --broken:#ef4444;
-    }
-    html,body{height:100%;margin:0;font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--accent)}
-    body{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px}
-    .wrap{width:100%;max-width:1200px}
-    .card{background:var(--card);border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,0.5);padding:20px}
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Daftar Penghuni Rusunawa</title>
 
-    .top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap}
-    .title{font-size:22px;font-weight:700;color:var(--accent)}
-    .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-
-    input.search {
-      flex: 1;
-      min-width: 280px;
-      padding: 10px 14px;
-      border-radius: 14px;
-      border: 1px solid #334155;
-      outline: none;
-      font-size: 14px;
-      transition: 0.2s;
-      background: #0f172a;
-      color: var(--accent);
-    }
-    input.search::placeholder{color:#64748b}
-    input.search:focus, select.filter:focus{
-      box-shadow:0 0 0 3px rgba(59,130,246,0.3);
-      border-color:#3b82f6;
-    }
-
-    select.filter{
-      padding:10px 14px;
-      border-radius:12px;
-      border:1px solid #334155;
-      outline:none;
-      font-size:14px;
-      background:#0f172a;
-      color:var(--accent);
-      transition:0.2s;
-    }
-
-    .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:20px}
-    .summary-item{border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:6px;color:#fff}
-    .summary-item span{font-size:26px;font-weight:700}
-    .summary-total{background:linear-gradient(135deg,#475569,#334155)}
-    .summary-ready{background:linear-gradient(135deg,#16a34a,#22c55e)}
-    .summary-occupied{background:linear-gradient(135deg,#2563eb,#3b82f6)}
-    .summary-broken{background:linear-gradient(135deg,#dc2626,#ef4444)}
-    .summary small{font-size:13px;color:#f1f5f9}
-
-    table{width:100%;border-collapse:collapse;font-size:15px;border-radius:12px;overflow:hidden}
-    thead th{background:#1e293b;text-align:left;padding:12px 14px;color:var(--muted);font-weight:600;border-bottom:2px solid #334155}
-    tbody tr:nth-child(even){background:#0f172a}
-    tbody tr:nth-child(odd){background:#1e293b}
-    tbody tr:hover{background:#334155}
-    td{padding:12px 14px;border-bottom:1px solid #334155;color:var(--accent)}
-
-    .no-results{padding:40px;text-align:center;color:var(--muted);font-size:15px}
-
-    .badge{padding:6px 10px;border-radius:9999px;font-size:13px;font-weight:600;color:#fff;display:inline-block}
-    .ready{background:var(--ready)}
-    .occupied{background:var(--occupied)}
-    .broken{background:var(--broken)}
-
-    button.clear{
-      background:#334155;
-      border:1px solid #475569;
-      padding:10px 14px;
-      border-radius:12px;
-      font-size:14px;
-      cursor:pointer;
-      transition:0.2s;
-      color:var(--accent);
-    }
-    button.clear:hover{background:#475569}
-
-    @media (max-width:720px){
-      body{padding:10px}
-      .top{flex-direction:column;align-items:stretch;gap:15px}
-      .controls{flex-direction:column;align-items:stretch;gap:12px;width:100%}
-      input.search{width:100%;min-width:auto;font-size:15px}
-      input.search{border: 1px solid #475569;border-radius: 12px;box-sizing: border-box;}
-      select.filter, button.clear{width:100%}
-      .summary{grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
-      .summary-item{padding:12px}
-      .summary-item span{font-size:20px}
-      table{font-size:13px}
-      thead th, td{padding:8px}
-      .title{font-size:20px;text-align:center;margin-bottom:8px}
-      .meta{text-align:center;display:block;margin-bottom:10px}
-    }
-  </style>
+<style>
+:root{
+--bg:#0f172a;--card:#1e293b;--muted:#94a3b8;--accent:#e2e8f0;
+--ready:#22c55e;--occupied:#3b82f6;--broken:#ef4444}
+body{margin:0;background:var(--bg);font-family:Segoe UI,Arial;color:var(--accent)}
+.wrap{max-width:1200px;margin:auto;padding:16px}
+.card{background:var(--card);border-radius:16px;padding:18px}
+.title{font-size:22px;font-weight:700;margin-bottom:6px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+input,select{padding:10px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#e2e8f0}
+table{width:100%;border-collapse:collapse}
+thead th{background:#1e293b;padding:10px;text-align:left}
+td{padding:10px;border-bottom:1px solid #334155}
+.badge{padding:4px 10px;border-radius:999px;font-size:12px;color:#fff}
+.ready{background:var(--ready)}.occupied{background:var(--occupied)}.broken{background:var(--broken)}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.box{padding:12px;border-radius:12px;color:#fff}
+.total{background:#334155}.siap{background:#16a34a}.isi{background:#2563eb}.rusak{background:#dc2626}
+</style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="card">
-      <div class="top">
-        <div>
-          <div class="title">Daftar Penghuni Rusunawa</div>
-          <div class="meta" style="font-size:14px;color:var(--muted)">UPDATE 01-01-2026</div>
-        </div>
-        <div class="controls">
-          <input id="search" class="search" placeholder="Cari berdasarkan unit, nama, atau kondisi" />
+<div class="wrap">
+<div class="card">
 
-          <select id="filter" class="filter">
-            <option value="">Semua Kondisi</option>
-            <option value="Siap Huni">Siap Huni</option>
-            <option value="Terisi">Terisi</option>
-            <option value="Rusak">Rusak</option>
-          </select>
+<div class="title">Daftar Penghuni Rusunawa</div>
 
-          <!-- ✅ Filter lokasi rusunawa -->
-          <select id="filterLokasi" class="filter">
-            <option value="">Semua Lokasi</option>
-            <option value="GM-">Ganda Maghfirah</option>
-            <option value="GM-A">Ganda Maghfirah Blok A</option>
-            <option value="GM-B">Ganda Maghfirah Blok B</option>
-            <option value="GM-C">Ganda Maghfirah Blok C</option>
-            <option value="TK-">Teluk Kelayan</option>
-          </select>
+<div class="controls">
+<input id="search" placeholder="Cari unit / nama"/>
+<select id="filter">
+<option value="">Semua Kondisi</option>
+<option>Terisi</option>
+<option>Siap Huni</option>
+<option>Rusak</option>
+</select>
+<select id="lokasi">
+<option value="">Semua Lokasi</option>
+<option value="GM-">Ganda Maghfirah</option>
+<option value="TK-">Teluk Kelayan</option>
+</select>
+</div>
 
-          <button id="clear" class="clear">Reset</button>
-        </div>
-      </div>
+<div id="summary" class="summary"></div>
 
-      <div id="summary" class="summary"></div>
+<div style="max-height:65vh;overflow:auto">
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Nama</th>
+<th>Telp</th>
+<th>Kondisi Unit</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
 
-      <div style="overflow:auto;max-height:62vh">
-        <table id="table">
-          <thead id="thead"></thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
+</div>
+</div>
 
-      <div id="nores" class="no-results" style="display:none">❌ Tidak ada data yang cocok.</div>
-    </div>
-  </div>
+<script>
+/* ================= CONFIG ================= */
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzjABRVgRaoMj3Y1gCU_DRJpnZIvkGwxRRxmPW6buV1POsQ87GQCLAeEBG5j9jJZux7iQ/exec";
+const CACHE_KEY = "RUSUN_CACHE_V3";
 
-  <script>
-    const data = [
-{ "Unit" : "GM-A1.01", "Nama" : "RAHMAD NOOR", "Telp" : "082354261731", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.02", "Nama" : "MUHAMMAD RAMLI", "Telp" : "085246405459", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.03", "Nama" : "FAISAL", "Telp" : "089691926743", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.04", "Nama" : "ARMINA", "Telp" : "082119726228", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.05", "Nama" : "FAHRIZAL ARRAHMAN", "Telp" : "082357410797", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.06", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A1.07", "Nama" : "MAULANA", "Telp" : "085389328213/085752965367", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.08", "Nama" : "NASRULLAH", "Telp" : "089666395927/082148150937", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.09", "Nama" : "FAISAL KAMNOOR", "Telp" : "085828333762", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.10", "Nama" : "SRI NOORLENA", "Telp" : "085932942276", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.11", "Nama" : "MAHDIAN NOOR", "Telp" : "081549247833", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.12", "Nama" : " ", "Telp" : " ", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-A1.13", "Nama" : "MARIATUL QIBTIAH", "Telp" : "089518065698", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.14", "Nama" : "SAM'ANI. H", "Telp" : "085332288550", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.15", "Nama" : "MUHAMMAD SAIBAN", "Telp" : "089692789332", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.16", "Nama" : "SWANTHO TJITRO WANDIRA", "Telp" : "085348483128", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.17", "Nama" : "RUDI PRASETYO", "Telp" : "082115855170", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.18", "Nama" : "SYAIFUL ANSYARI", "Telp" : "085251761146", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.19", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A1.20", "Nama" : "RIZKI AKBAR", "Telp" : "083858877525", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.21", "Nama" : "AHMAD NAWAWI", "Telp" : "085249493477", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.22", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A1.23", "Nama" : "AHMAD NUR MAULIDI", "Telp" : "0895700552371", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A1.24", "Nama" : "MUHAMMAD MASRAWI", "Telp" : "081253533398", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A2.01", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A2.02", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A2.03", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A2.04", "Nama" : "BADARRUDIN", "Telp" : "081649316520", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A2.05", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A2.06", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A2.07", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A2.08", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A2.09", "Nama" : "ARBANI YANSAH NOOR", "Telp" : "085249349160", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A2.10", "Nama" : "DENNY HENDRA LESMANA", "Telp" : "087840000880", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A2.11", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A2.12", "Nama" : "SALMANI", "Telp" : "089653948071/085248048837", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A2.13", "Nama" : "ISMAIL", "Telp" : "0895623544600", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A2.14", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A2.15", "Nama" : "MUHAMMAD HASAN AK", "Telp" : "08981182127", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A2.16", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A2.17", "Nama" : "SITI MISBAH", "Telp" : "085606136662", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A2.18", "Nama" : "M. YAMANI", "Telp" : "088242485475", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A2.19", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A2.20", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A2.21", "Nama" : "SAINUDDIN", "Telp" : "085787452135/085787452165", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A2.22", "Nama" : "M. EDO KASAFANI HIDAYAT", "Telp" : "083138617961", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A2.23", "Nama" : "MUHAMMAD RAHIM ASY SYARIFI", "Telp" : "087846716622", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A2.24", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A3.01", "Nama" : "ZAINAL ABIDIN", "Telp" : "087724220984", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A3.02", "Nama" : "SEPTESA INSAN CAESAR", "Telp" : "087812101832", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A3.03", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A3.04", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A3.05", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A3.06", "Nama" : "MUHAMMAD IQBAL", "Telp" : "089517909757", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A3.07", "Nama" : "MUHAMMAD SAIROJI", "Telp" : "089525787703", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A3.08", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A3.09", "Nama" : "TATI AISYAH", "Telp" : "085752134337", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A3.10", "Nama" : "ROYKE ANTONIUS ROOROH", "Telp" : "081349327452", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A3.11", "Nama" : "HADIYATULLAH", "Telp" : "TIDAK LENGKAP", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A3.12", "Nama" : "SUPRIADI", "Telp" : "082153530827", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A3.13", "Nama" : "JUMANANG DEMANG", "Telp" : "087784121423", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A3.14", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A3.15", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A3.16", "Nama" : "FATHUR RAHMAN", "Telp" : "083140212886", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A3.17", "Nama" : "WAHYUDI HIDAYATULLAH", "Telp" : "085849342395", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A3.18", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A3.19", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A3.20", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A3.21", "Nama" : "FAHRUL RAZI S", "Telp" : "081549258024", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A3.22", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A3.23", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A3.24", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-A4.01", "Nama" : "HANAPI", "Telp" : "088705662592", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A4.02", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-A4.03", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A4.04", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A4.05", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A4.06", "Nama" : "RUSMINNURYADI", "Telp" : "083836017365", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A4.07", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-A4.08", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-A4.09", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A4.10", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-A4.11", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A4.12", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-A4.13", "Nama" : "FAUZI", "Telp" : "085346949348", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A4.14", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A4.15", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-A4.16", "Nama" : "MARTIN", "Telp" : "083138026513", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A4.17", "Nama" : "ERNI", "Telp" : "082154220010", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A4.18", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A4.19", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-A4.20", "Nama" : "SUWARNO", "Telp" : "083141104222", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-A4.21", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-A4.22", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A4.23", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-A4.24", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-B1.01", "Nama" : "M. ASRUL PAJRIN", "Telp" : "082155540360/082251913232", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.02", "Nama" : "M. RAHADI", "Telp" : "895329975653", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.03", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-B1.04", "Nama" : "MUHAMMAD RIDUAN", "Telp" : "085705612988", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.05", "Nama" : "AHMAD ANSARI", "Telp" : "081952524647/0895414224670", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.06", "Nama" : "SUTARNO", "Telp" : "083846225973", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.07", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B1.08", "Nama" : "RUSMALINA", "Telp" : "083137970237", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.09", "Nama" : "H. AKHYAR RUJANI", "Telp" : "081916287211", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.10", "Nama" : "WAHYU RAMADHAN", "Telp" : "087836326574/085944615558", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.11", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B1.12", "Nama" : "M. HERI WAHYUDI", "Telp" : "0882020269891", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.13", "Nama" : "MAHRITA", "Telp" : "081958436184", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.14", "Nama" : "PAHRURAJI", "Telp" : "087815934842", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.15", "Nama" : "M. MUHDI", "Telp" : "087815934842", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.16", "Nama" : "MURNIDAH", "Telp" : "087743278496", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.17", "Nama" : "ERIN WAHYUDI", "Telp" : "TIDAK LENGKAP", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.18", "Nama" : "AKHMAD SYARIF", "Telp" : "081255556844", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.19", "Nama" : "ARIF", "Telp" : "085753718172/087710341517", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.20", "Nama" : "MUHAMMAD", "Telp" : "085252475900/085752349208", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.21", "Nama" : "MUHAMMAD ANDRE", "Telp" : "089632600050", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.22", "Nama" : "DEDE MAULANA GANI", "Telp" : "089630917367/083135742238", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.23", "Nama" : "NOORHAFIZI", "Telp" : "089650782888", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B1.24", "Nama" : "RAMLI", "Telp" : "088980925780/089529063021", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.01", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-B2.02", "Nama" : "MUHAMMAD NOOR", "Telp" : "083143862454", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.03", "Nama" : "HUSIN", "Telp" : "087795105608", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.04", "Nama" : "SEPTIANA EKA SAPUTRI", "Telp" : "0895413674732", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.05", "Nama" : "MUHAMMAD AMIN", "Telp" : "0881037377699", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.06", "Nama" : "HASAN", "Telp" : "0895338722118", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.07", "Nama" : "KUSUMO HADI WIJOYO", "Telp" : "TIDAK LENGKAP", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.08", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-B2.09", "Nama" : "MUHAMAD ARIFIN", "Telp" : "083841886621", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.10", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-B2.11", "Nama" : "ABDUL BAHRI", "Telp" : "081251555063", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.12", "Nama" : "SUBIHI YANNOOR", "Telp" : "085717248938", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.13", "Nama" : "IRFAN RIZKI FADILLAH", "Telp" : "083159711255", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.14", "Nama" : "SLAMET DWI PURWANTO", "Telp" : "085776473013", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.15", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-B2.16", "Nama" : "AHMAD RIFQI BADALI", "Telp" : "083801213791", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.17", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-B2.18", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B2.19", "Nama" : "RAHMADI", "Telp" : "087777042117", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.20", "Nama" : "HERRY", "Telp" : "TIDAK LENGKAP", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.21", "Nama" : "MULIANA", "Telp" : "085757565260", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.22", "Nama" : "MIMIN", "Telp" : "082158909947", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.23", "Nama" : "MUHAMMAD ILYAS", "Telp" : "081251563998/085705201640", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B2.24", "Nama" : "EDDY", "Telp" : "08125163706", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.01", "Nama" : "MAJERIANNOOR", "Telp" : "085787619686", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.02", "Nama" : "NOOR MEGAWATI", "Telp" : "081528745989", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.03", "Nama" : "SUPIAN", "Telp" : "082254795109/085349684504", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.04", "Nama" : "M. NOOR", "Telp" : "083865987755", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.05", "Nama" : "FADLI RAHMAN", "Telp" : "089519433567", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.06", "Nama" : "GALIH DWI KURNIAWAN", "Telp" : "088245357948", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.07", "Nama" : "AKHMAD", "Telp" : "085251890202", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.08", "Nama" : "MUHAMMAD IHSAN", "Telp" : "089637179269", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.09", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B3.10", "Nama" : "M. YUHDI", "Telp" : "081256595300", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.11", "Nama" : "MUHAMMAD SAIDI", "Telp" : "083140366222/083150772835", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.12", "Nama" : "SUPIANNOR", "Telp" : "083856200108", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.13", "Nama" : "FAJERIANSYAH", "Telp" : "085249696432/0895339703820", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.14", "Nama" : "RAHMATULLAH HAMDI", "Telp" : "083131665608/089699871437", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.15", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B3.16", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B3.17", "Nama" : "MARIAH", "Telp" : "085247281123", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.18", "Nama" : "SUPIYANSYAH", "Telp" : "082352701199", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.19", "Nama" : "M. ARDIANI", "Telp" : "085251698883", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.20", "Nama" : "MISRANI", "Telp" : "082245370231", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.21", "Nama" : "SUHAIMI", "Telp" : "083863004364", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.22", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B3.23", "Nama" : "MUHAMMAD YOGI SAPUTRA", "Telp" : "089628546308", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B3.24", "Nama" : "NOVEL FIRMANSYAH", "Telp" : "081347173910", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.01", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-B4.02", "Nama" : "SYARWANI", "Telp" : "085106066406", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.03", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B4.04", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B4.05", "Nama" : "BAHTIAR", "Telp" : "085180938178", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.06", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B4.07", "Nama" : "AHMAD RIYADI", "Telp" : "081528808809", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.08", "Nama" : "MUHAMMAD FAJRIANOOR", "Telp" : "083143217326", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.09", "Nama" : "ZAINUDDIN", "Telp" : "085252629314", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.10", "Nama" : "MURNIATI", "Telp" : "087895364565", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.11", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B4.12", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B4.13", "Nama" : "M. INDRA JAYA", "Telp" : "083176726107", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.14", "Nama" : "SAIBATUL ASLAMI", "Telp" : "081357044404", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.15", "Nama" : "WAHYUJI", "Telp" : "081545063515", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.16", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B4.17", "Nama" : "HUSNI", "Telp" : "085249388668/083114102791", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.18", "Nama" : "MISRANSYAH", "Telp" : "085346949348", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.19", "Nama" : "HENDRI LESMANA", "Telp" : "081649050599", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.20", "Nama" : "AHMAD EFENDI", "Telp" : "085652326675", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.21", "Nama" : "SURIANSYAH", "Telp" : "089507659430", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-B4.22", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B4.23", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-B4.24", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C0.01", "Nama" : "LAUW SIN HUN", "Telp" : "085777704668", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C0.02", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C0.03", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C1.01", "Nama" : "AHMAD SADIKIN", "Telp" : "081251312186/085924372995", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.02", "Nama" : "ERWEN DINATA", "Telp" : "082351915334", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.03", "Nama" : "IKHMAN RIFALDI", "Telp" : "08970787116/083140602246", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.04", "Nama" : "RAHMAD", "Telp" : "085939410928", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.05", "Nama" : "AGATHA GRACE HADI PRATAMA", "Telp" : "08991117129", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.06", "Nama" : "SURIANSYAH", "Telp" : "0881024796679/089627846699", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.07", "Nama" : "MUHAMMAD JULIANTO", "Telp" : "085251144999", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.08", "Nama" : "DWI FITRI YANTO", "Telp" : "TIDAK LENGKAP", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.09", "Nama" : "RUMAINUR ANWAR FUAN", "Telp" : "085250800454", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.10", "Nama" : "MOCHAMAD SULKAN", "Telp" : "085251164182", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.11", "Nama" : "ANANDA RIZKY PERDANA", "Telp" : "0895366374240", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.12", "Nama" : "MUHAMMAD ARBAIN", "Telp" : "089676768427", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.13", "Nama" : "MA'RUP", "Telp" : "083160371134/083121966814", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.14", "Nama" : "FITRIYANA", "Telp" : "088242127190/088704682164", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.15", "Nama" : "RAHMAN", "Telp" : "082150634757", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.16", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C1.17", "Nama" : "ROSITA", "Telp" : "082354487993", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.18", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C1.19", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C1.20", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C1.21", "Nama" : "DEWO A. BAHRUDIN", "Telp" : "083824523850", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.22", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C1.23", "Nama" : "MUHAMMAD GUNTUR", "Telp" : "085750797999", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C1.24", "Nama" : "MUHAMMAD SAFRUDIN S.KOM", "Telp" : "087800178600", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.01", "Nama" : "RIKI YANDRA", "Telp" : "083174993428/083114857132", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.02", "Nama" : "AKHMAD RAMALI", "Telp" : "085245598016", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.03", "Nama" : "ISMU HANSAH", "Telp" : "0895321516111", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.04", "Nama" : "NOR HAIRI", "Telp" : "089508401750", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.05", "Nama" : "RONI", "Telp" : "082253648183", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.06", "Nama" : "MUHAMMAD RIDHANI", "Telp" : "087846353619/087710367521", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.07", "Nama" : "SYARIPUDIN", "Telp" : "089699870888", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.08", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C2.09", "Nama" : "FERIYADIE, SE", "Telp" : "085157622011/085161086375", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.10", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C2.11", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C2.12", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C2.13", "Nama" : "MUHAMMAD SALEH", "Telp" : "083817226439", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.14", "Nama" : "HAIRIANI", "Telp" : "083119118196", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.15", "Nama" : "MIRZA APRIZALDI", "Telp" : "082155328510", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.16", "Nama" : "ALIANSYAH", "Telp" : "083854172470", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.17", "Nama" : "KANCEL", "Telp" : "08875690923", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.18", "Nama" : "ASRA", "Telp" : "085348680098", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.19", "Nama" : "BAHRUL HADI", "Telp" : "087812357921/085203854477", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.20", "Nama" : "SARBANI", "Telp" : "083193029378", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.21", "Nama" : "ABDUL GANI", "Telp" : "081258432095", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.22", "Nama" : "BERRY CHRISTIAN HERLIJANTO", "Telp" : "085102590288/08503356543", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C2.23", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C2.24", "Nama" : "ISMAIL", "Telp" : "087715555214", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.01", "Nama" : "JUHRAINI", "Telp" : "082256470207", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.02", "Nama" : "ANDRE IRANI WANTO", "Telp" : "083823079626", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.03", "Nama" : "PURWANTO", "Telp" : "0895414540606", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.04", "Nama" : "M. IDRIS", "Telp" : "081346386688", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.05", "Nama" : "TISNA SANUSI", "Telp" : "085753929956", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.06", "Nama" : "SURDANI", "Telp" : "089634573649", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.07", "Nama" : "MUHAMMAD YAMIN", "Telp" : "083862496906", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.08", "Nama" : "MURDANI", "Telp" : "082253710568/085754202876", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.09", "Nama" : "AULIA RAHMAN", "Telp" : "083159723169", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.10", "Nama" : "ANSUR RULLAH", "Telp" : "085333343937", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.11", "Nama" : "RAHMADI", "Telp" : "083824192233", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.12", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C3.13", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C3.14", "Nama" : "RIDUAN NOR", "Telp" : "0895419750108/085348470691", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.15", "Nama" : "AKHMAD WAHYUDI", "Telp" : "085821691116/085751117483", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.16", "Nama" : "HASRUL", "Telp" : "081350701777", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.17", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C3.18", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C3.19", "Nama" : "SANUSI", "Telp" : "085248805451", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.20", "Nama" : "DARMAYANTO", "Telp" : "081253931121/081450387952", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.21", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C3.22", "Nama" : "RAHMAT", "Telp" : "08977267580", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C3.23", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C3.24", "Nama" : "SARLAN", "Telp" : "087850019326", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.01", "Nama" : "ABDUL RASUL", "Telp" : "085108468383", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.02", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C4.03", "Nama" : "ADITYA", "Telp" : "083143252886/0895340511672", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.04", "Nama" : "AHMAD SURYANI", "Telp" : "0895340508760", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.05", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C4.06", "Nama" : "ALFIAN NOOR", "Telp" : "081254260458", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.07", "Nama" : "RAHMANSYAH", "Telp" : "083844008724", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.08", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C4.09", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C4.10", "Nama" : "HARLI", "Telp" : "081903209059", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.11", "Nama" : "TAUFIKURAHMAN", "Telp" : "085347320766", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.12", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C4.13", "Nama" : "ABDUL MAJID", "Telp" : "083816051649", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.14", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C4.15", "Nama" : "RAHMADI", "Telp" : "085651900068", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.16", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "GM-C4.17", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "GM-C4.18", "Nama" : "HARIS SOFYAN", "Telp" : "TIDAK LENGKAP", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.19", "Nama" : "RAMINA", "Telp" : "085650805731", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.20", "Nama" : "AKHMAD KHAIDIR", "Telp" : "081255964593", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.21", "Nama" : "RAHMADANI", "Telp" : "085156645589", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.22", "Nama" : "ZUHAIDA", "Telp" : "083117768746", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.23", "Nama" : "SAYUTI", "Telp" : "08978184443", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "GM-C4.24", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "TK-101", "Nama" : "RUDI", "Telp" : "085777111635/085828343943", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-102", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "TK-103", "Nama" : "ANJAS ISMAIL", "Telp" : "085705434828", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-104", "Nama" : "JOKO SANTOSO", "Telp" : "081351314485", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-105", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "TK-106", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "TK-107", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "TK-108", "Nama" : "NANANG", "Telp" : "081952316462", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-109", "Nama" : "ARIF SYAKHBANA IERAF", "Telp" : "085754205008/085933523255", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-110", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "TK-201", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "TK-202", "Nama" : "MASITAH", "Telp" : "081349282774", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-203", "Nama" : "ABDUL KHAIR", "Telp" : "0895414064165", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-204", "Nama" : "MUHAMMAD AGUS BUDIANTO", "Telp" : "087841048177", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-205", "Nama" : "MENTARI HJ", "Telp" : "089518036581", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-206", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "TK-207", "Nama" : "GUSTIANOR RAHMAN", "Telp" : "085348476226", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-208", "Nama" : "MUHAMMAD FIKRI AZHARI", "Telp" : "081251515522", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-209", "Nama" : "RINDRA ADRIANDI", "Telp" : "082148551895", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-210", "Nama" : "MUHAMMAD SALIM", "Telp" : "089636320527", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-211", "Nama" : "MUHAMMAD SYARWANI ABDAN", "Telp" : "085388683495", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-212", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "TK-213", "Nama" : "AHMAD JAINUDDIN", "Telp" : "082159068294", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-214", "Nama" : "MUHAMMAD ARI MAULANA KUSUMA", "Telp" : "085930239024/0895411317670", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-215", "Nama" : "SAUGIE ZULFIKAR", "Telp" : "0812545945", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-216", "Nama" : "RIFQI MUHARRAM", "Telp" : "089690928707", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-301", "Nama" : "GT. MUHAMMAD RIZAL PERDANA", "Telp" : "082255820445/089691413411", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-302", "Nama" : "ALMAIDHA", "Telp" : "089691897142", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-303", "Nama" : "AULIA RAHMAN", "Telp" : "085387262789", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-304", "Nama" : "TONY AZRIN", "Telp" : "089602571191", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-305", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "TK-306", "Nama" : "ROFIIN NOOR", "Telp" : "089674060979", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-307", "Nama" : "M. KASMAN", "Telp" : "085757821042/0882021720025", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-308", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "TK-309", "Nama" : "YA'KUB", "Telp" : "087766776767/081952316161", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-310", "Nama" : "MUHAMMAD YUNUS", "Telp" : "083867433259", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-311", "Nama" : "MUHAMMAD RIFAI'E", "Telp" : "082147558244", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-312", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "TK-313", "Nama" : "RINTO", "Telp" : "081256440800/082150350459", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-314", "Nama" : "SYARIFUDDIN", "Telp" : "08991138082", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-315", "Nama" : "ZULKIFLI", "Telp" : "085348930621", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-316", "Nama" : "MUHAMMAD HANAFI", "Telp" : "082221779101", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-401", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "TK-402", "Nama" : "HOLFRIENDY CHRISTOGUSTA LINCKADAVID", "Telp" : "0895400758080", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-403", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "TK-404", "Nama" : "UMMU KHOFIATUN", "Telp" : "085790636783/0882020558169", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-405", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "TK-406", "Nama" : "KAMAL HUDA", "Telp" : "081649066572", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-407", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "TK-408", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "TK-409", "Nama" : "FAUSI", "Telp" : "085389772008", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-410", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Rusak" },
-{ "Unit" : "TK-411", "Nama" : "ARMAIN", "Telp" : "085828224861", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-412", "Nama" : "RUDI FAUZIE", "Telp" : "088801186421/085652101604", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-413", "Nama" : " ", "Telp" : "", "Kondisi Unit" : "Siap Huni" },
-{ "Unit" : "TK-414", "Nama" : "ARDIANSYAH", "Telp" : "085252509376", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-415", "Nama" : "NORDIANA", "Telp" : "085652146250", "Kondisi Unit" : "Terisi" },
-{ "Unit" : "TK-416", "Nama" : "MUHAMMAD IKBAL", "Telp" : "083119244901", "Kondisi Unit" : "Terisi" },
-    ];
+/* ================= STATE ================= */
+let RAW = [];
+let VIEW = [];
 
-    function renderTable(){
-      const searchVal = document.getElementById("search").value.toLowerCase();
-      const filterVal = document.getElementById("filter").value;
-      const lokasiVal = document.getElementById("filterLokasi").value;
+/* ================= FAST FETCH ================= */
+async function load(){
+try{
 
-      let filtered = data.filter(row => {
-        const matchSearch =
-          row.Unit.toLowerCase().includes(searchVal) ||
-          row.Nama.toLowerCase().includes(searchVal) ||
-          row["Kondisi Unit"].toLowerCase().includes(searchVal);
+// ===== CACHE INSTANT LOAD =====
+const cache = sessionStorage.getItem(CACHE_KEY);
+if(cache){
+RAW = JSON.parse(cache);
+VIEW = RAW;
+render();
+}
 
-        const matchFilter = filterVal ? row["Kondisi Unit"] === filterVal : true;
-        const matchLokasi = lokasiVal ? row.Unit.startsWith(lokasiVal) : true;
+// ===== BACKGROUND REFRESH =====
+const controller = new AbortController();
+setTimeout(()=>controller.abort(), 8000);
 
-        return matchSearch && matchFilter && matchLokasi;
-      });
+const res = await fetch(GAS_URL + "?action=sheet2", {
+  signal: controller.signal
+});
 
-      // ✅ render header tabel
-      const thead = document.getElementById("thead");
-      thead.innerHTML = "<tr><th>Unit</th><th>Nama</th><th>Telp</th><th>Kondisi Unit</th></tr>";
+const json = await res.json();
 
-      // ✅ render isi tabel
-      const tbody = document.getElementById("tbody");
-      tbody.innerHTML = "";
-      filtered.forEach(row => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${row.Unit}</td>
-            <td>${row.Nama}</td>
-            <td>${row.Telp}</td>
-            <td><span class="badge ${
-              row["Kondisi Unit"] === "Siap Huni" ? "ready" :
-              row["Kondisi Unit"] === "Terisi" ? "occupied" :
-              row["Kondisi Unit"] === "Rusak" ? "broken" : ""
-            }">${row["Kondisi Unit"]}</span></td>
-          </tr>`;
-      });
+if(!json.status) return;
 
-      // ✅ tampilkan pesan kalau kosong
-      document.getElementById("nores").style.display = filtered.length ? "none" : "block";
+RAW = json.data.map(r=>({
+Unit: r.unit || "",
+Nama: r.nama || "",
+Telp: r.telp || r["Nomor Telp./HP"] || "",
+"Kondisi Unit": r.kondisi || ""
+}));
 
-      // ✅ render ringkasan kondisi
-      const summary = document.getElementById("summary");
-      const total = filtered.length;
-      const siap = filtered.filter(r=>r["Kondisi Unit"]==="Siap Huni").length;
-      const terisi = filtered.filter(r=>r["Kondisi Unit"]==="Terisi").length;
-      const rusak = filtered.filter(r=>r["Kondisi Unit"]==="Rusak").length;
+sessionStorage.setItem(CACHE_KEY, JSON.stringify(RAW));
+VIEW = RAW;
+render();
 
-      summary.innerHTML = `
-        <div class="summary-item summary-total"><span>${total}</span><small>Total Unit</small></div>
-        <div class="summary-item summary-ready"><span>${siap}</span><small>Siap Huni</small></div>
-        <div class="summary-item summary-occupied"><span>${terisi}</span><small>Terisi</small></div>
-        <div class="summary-item summary-broken"><span>${rusak}</span><small>Rusak</small></div>
-      `;
-    }
+}catch(e){
+if(e.name === "AbortError"){
+console.warn("Fetch timeout — pakai cache");
+}else{
+console.error("GAS ERROR", e);
+}
+}
+}
 
-    document.getElementById("search").addEventListener("input", renderTable);
-    document.getElementById("filter").addEventListener("change", renderTable);
-    document.getElementById("filterLokasi").addEventListener("change", renderTable);
-    document.getElementById("clear").addEventListener("click", () => {
-      document.getElementById("search").value = "";
-      document.getElementById("filter").value = "";
-      document.getElementById("filterLokasi").value = "";
-      renderTable();
-    });
+/* ================= FAST RENDER ================= */
+function render(){
 
-    renderTable();
-  </script>
+// ===== SUMMARY =====
+let total = VIEW.length;
+let terisi = 0, siap = 0, rusak = 0;
+
+for(const d of VIEW){
+if(d["Kondisi Unit"]==="Terisi") terisi++;
+else if(d["Kondisi Unit"]==="Siap Huni") siap++;
+else if(d["Kondisi Unit"]==="Rusak") rusak++;
+}
+
+document.getElementById("summary").innerHTML = `
+<div class="box total">TOTAL<br><b>${total}</b></div>
+<div class="box isi">TERISI<br><b>${terisi}</b></div>
+<div class="box siap">SIAP<br><b>${siap}</b></div>
+<div class="box rusak">RUSAK<br><b>${rusak}</b></div>`;
+
+// ===== TABLE FAST BUILD (NO REFLOW) =====
+let html = "";
+for(const d of VIEW){
+
+let cls = "ready";
+if(d["Kondisi Unit"]==="Terisi") cls="occupied";
+if(d["Kondisi Unit"]==="Rusak") cls="broken";
+
+html += `<tr>
+<td>${d.Unit}</td>
+<td>${d.Nama}</td>
+<td>${d.Telp}</td>
+<td><span class="badge ${cls}">${d["Kondisi Unit"]}</span></td>
+</tr>`;
+}
+
+document.getElementById("tbody").innerHTML = html;
+}
+
+/* ================= FILTER SUPER CEPAT ================= */
+function applyFilter(){
+
+const s = document.getElementById("search").value.toLowerCase();
+const f = document.getElementById("filter").value;
+const l = document.getElementById("lokasi").value;
+
+VIEW = RAW.filter(d=>{
+
+if(f && d["Kondisi Unit"]!==f) return false;
+if(l && !d.Unit.startsWith(l)) return false;
+
+if(!s) return true;
+return (
+d.Unit.toLowerCase().includes(s) ||
+d.Nama.toLowerCase().includes(s)
+);
+});
+
+render();
+}
+
+/* ================= EVENTS ================= */
+document.getElementById("search").oninput = applyFilter;
+document.getElementById("filter").onchange = applyFilter;
+document.getElementById("lokasi").onchange = applyFilter;
+
+/* ================= START ================= */
+load();
+</script>
+
 </body>
 </html>
