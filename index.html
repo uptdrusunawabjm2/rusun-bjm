@@ -23,6 +23,61 @@ td{padding:10px;border-bottom:1px solid #334155}
 .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
 .box{padding:12px;border-radius:12px;color:#fff}
 .total{background:#334155}.siap{background:#16a34a}.isi{background:#2563eb}.rusak{background:#dc2626}
+
+/* TABLE LOOK MODERN */
+table{
+border-collapse: collapse;
+}
+
+tbody tr{
+transition: .15s;
+}
+
+tbody tr:hover{
+background: rgba(255,255,255,0.03);
+}
+
+/* UNIT TEXT */
+td:first-child{
+font-weight: 600;
+letter-spacing: .5px;
+}
+
+/* PHONE */
+td:nth-child(3){
+font-family: monospace;
+color: #cfd8ff;
+}
+
+/* BADGE STYLE */
+.badge{
+padding: 4px 10px;
+border-radius: 999px;
+font-size: 12px;
+font-weight: 600;
+letter-spacing: .3px;
+}
+
+.badge.occupied{
+background: #2d6cdf;
+}
+
+.badge.ready{
+background: #1aa34a;
+}
+
+.badge.broken{
+background: #e53935;
+}
+
+/* SUMMARY BOX SMOOTH */
+.box{
+transition: .2s;
+}
+.box:hover{
+transform: translateY(-2px);
+}
+
 </style>
 </head>
 
