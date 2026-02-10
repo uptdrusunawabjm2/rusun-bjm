@@ -99,7 +99,7 @@ const json = await res.json();
 
 if(!json.status) return;
 
-const rows = json.data.sheet1 || json.data || [];
+const rows = json?.data?.data || [];
 
 RAW = rows.map(r=>{
 
