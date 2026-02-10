@@ -78,6 +78,16 @@ transition: .2s;
 transform: translateY(-2px);
 }
 
+td{
+text-transform: none;
+}
+
+td:first-child{
+font-weight: 600;
+letter-spacing: .5px;
+font-family: monospace;
+}
+
 </style>
 </head>
 
@@ -243,7 +253,7 @@ else if(k.includes("rusak")) cls="broken";
 
 
 html += `<tr>
-<td>${d.Unit}</td>
+<td>${String(d.Unit).toUpperCase()}</td>
 <td>${d.Nama}</td>
 <td>${d.Telp}</td>
 <td><span class="badge ${cls}">${d["Kondisi Unit"]}</span></td>
