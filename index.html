@@ -99,7 +99,10 @@ const json = await res.json();
 
 if(!json.status) return;
 
-RAW = json.data.map(r=>{
+const rows = json.data.sheet1 || json.data || [];
+
+RAW = rows.map(r=>{
+
 
 const unit =
 r.unit ||
@@ -204,7 +207,20 @@ const l = document.getElementById("lokasi").value;
 
 VIEW = RAW.filter(d=>{
 
-if(f && d["Kondisi Unit"]!==f) return false;
+if(f){
+const dk = String(d["Kondisi Unit"] || "")
+.toLowerCase()
+.replace(/\s+/g," ")
+.trim();
+
+const fk = String(f || "")
+.toLowerCase()
+.replace(/\s+/g," ")
+.trim();
+
+if(dk !== fk) return false;
+}
+
 if(l && !d.Unit.startsWith(l)) return false;
 
 if(!s) return true;
