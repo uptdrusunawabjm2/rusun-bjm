@@ -4,6 +4,7 @@
   "routes": [
     { "handle": "filesystem" },
     { "src": "^/$", "dest": "/index.html" },
-    { "src": "^/portal$", "dest": "/portal.html" }
+    { "src": "^/portal$", "dest": "/portal.html" },
+    { "src": "^/portal.html$", "dest": "/portal.html" }
   ]
 }
