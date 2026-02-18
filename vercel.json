@@ -2,7 +2,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "routes": [
-    { "src": "/", "dest": "/index.html" },
-    { "src": "/portal", "dest": "/portal.html" }
+    { "handle": "filesystem" },
+    { "src": "^/$", "dest": "/index.html" },
+    { "src": "^/portal$", "dest": "/portal.html" }
   ]
 }
