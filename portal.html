@@ -15,11 +15,19 @@
 <style>
 body { min-height:100svh; }
 
-.menu-card{
-  transition:all .2s ease;
+.menu-card{ transition:all .2s ease; }
+.menu-card:active{ transform:scale(.97); }
+
+/* ===== FIX POPUP POSITION ===== */
+#modalAdmin{
+  backdrop-filter: blur(4px);
 }
-.menu-card:active{
-  transform:scale(.97);
+#modalAdmin > div{
+  animation: slideUp .25s ease;
+}
+@keyframes slideUp{
+  from{ transform: translateY(40px); opacity:.4; }
+  to{ transform: translateY(0); opacity:1; }
 }
 </style>
 </head>
@@ -40,8 +48,8 @@ body { min-height:100svh; }
 <!-- MENU LIST -->
 <div class="space-y-4">
 
-<a href="https://linktr.ee/uptd.rusun.bjm/" target="_blank"
-class="menu-card block bg-blue-600 rounded-2xl p-4 shadow-lg">
+<button onclick="openAdmin()"
+class="menu-card block w-full text-left bg-blue-600 rounded-2xl p-4 shadow-lg">
   <div class="flex items-center gap-4">
     <div class="text-2xl">📋</div>
     <div>
@@ -49,7 +57,7 @@ class="menu-card block bg-blue-600 rounded-2xl p-4 shadow-lg">
       <div class="text-blue-100 text-sm">Input & dokumen penghuni</div>
     </div>
   </div>
-</a>
+</button>
 
 <a href="https://rusun-bjm.vercel.app/" target="_blank"
 class="menu-card block bg-indigo-600 rounded-2xl p-4 shadow-lg">
@@ -141,12 +149,54 @@ class="menu-card block bg-teal-600 rounded-2xl p-4 shadow-lg">
 
 </div>
 
-<!-- FOOTER -->
 <div class="mt-10 text-center text-slate-500 text-xs">
-  © 2026 Sistem Informasi Rusunawa Kawe
+© 2026 Sistem Informasi Rusunawa Kawe
 </div>
 
 </div>
+
+<!-- ================= POPUP FORM ADMIN ================= -->
+<div id="modalAdmin"
+class="fixed inset-0 bg-black/60 hidden flex items-end justify-center z-50 px-3">
+
+  <div class="w-full max-w-md mx-auto bg-slate-900 rounded-2xl p-5 border border-slate-700 shadow-2xl mb-4">
+
+    <div class="text-center mb-4">
+      <div class="text-lg font-semibold">Form Administrasi</div>
+      <div class="text-slate-400 text-sm">untuk Penghuni</div>
+    </div>
+
+    <div class="space-y-3">
+
+      <a href="https://sirab-daftar-2026.vercel.app/" target="_blank"
+      class="block bg-blue-600 rounded-xl p-3 text-center">Pendaftaran</a>
+
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScSWFZRazmtbYhIW-yiJloUCxcCFOE8kGY1uD9aT0VDWE6rFQ/viewform" target="_blank"
+      class="block bg-indigo-600 rounded-xl p-3 text-center">Perpanjangan Sewa</a>
+
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfNCNNtUYzzRivZl3ZVPXAsS0NqtKUiHVF-D3dx3sB7FfOGdw/viewform" target="_blank"
+      class="block bg-emerald-600 rounded-xl p-3 text-center">Permohonan Pindah</a>
+
+    </div>
+
+    <button onclick="closeAdmin()"
+    class="mt-5 w-full bg-slate-800 rounded-xl p-3">Tutup</button>
+
+  </div>
+</div>
+
+<script>
+function openAdmin(){
+  const m=document.getElementById("modalAdmin");
+  m.classList.remove("hidden");
+  m.classList.add("flex");
+}
+function closeAdmin(){
+  const m=document.getElementById("modalAdmin");
+  m.classList.add("hidden");
+  m.classList.remove("flex");
+}
+</script>
 
 </body>
 </html>
