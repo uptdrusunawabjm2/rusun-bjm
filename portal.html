@@ -14,15 +14,25 @@
 
 <style>
 body { min-height:100svh; }
-
 .menu-card{ transition:all .2s ease; }
 .menu-card:active{ transform:scale(.97); }
 
-/* ===== FIX POPUP POSITION ===== */
-#modalAdmin{
+#modalAdmin,
+#modalPenghuni,
+#modalDaftar,
+#modalAduan,
+#modalKerja,
+#modalPDAM
+{
   backdrop-filter: blur(4px);
 }
-#modalAdmin > div{
+#modalAdmin > div,
+#modalPenghuni > div,
+#modalDaftar > div,
+#modalAduan > div,
+#modalKerja > div,
+#modalPDAM > div
+{
   animation: slideUp .25s ease;
 }
 @keyframes slideUp{
@@ -33,7 +43,6 @@ body { min-height:100svh; }
 </head>
 
 <body class="bg-slate-950 text-white min-h-screen">
-
 <div class="max-w-md mx-auto px-4 py-6">
 
 <!-- HEADER -->
@@ -48,111 +57,71 @@ body { min-height:100svh; }
 <!-- MENU LIST -->
 <div class="space-y-4">
 
-<button onclick="openAdmin()"
-class="menu-card block w-full text-left bg-blue-600 rounded-2xl p-4 shadow-lg">
-  <div class="flex items-center gap-4">
-    <div class="text-2xl">📋</div>
-    <div>
-      <div class="font-semibold text-lg">Form Administrasi</div>
-      <div class="text-blue-100 text-sm">link/tautan untuk Penghuni</div>
-    </div>
-  </div>
+<button onclick="openAdmin()" class="menu-card block w-full text-left bg-blue-600 rounded-2xl p-4 shadow-lg">
+<div class="flex items-center gap-4">
+<div class="text-2xl">📋</div>
+<div>
+<div class="font-semibold text-lg">Form Administrasi</div>
+<div class="text-blue-100 text-sm">link/tautan untuk Penghuni</div>
+</div>
+</div>
 </button>
 
-<a href="https://rusun-bjm.vercel.app/" target="_blank"
-class="menu-card block bg-indigo-600 rounded-2xl p-4 shadow-lg">
-  <div class="flex items-center gap-4">
-    <div class="text-2xl">🏢</div>
-    <div>
-      <div class="font-semibold text-lg">Cek Penghuni</div>
-      <div class="text-indigo-100 text-sm">Data penghuni aktif</div>
-    </div>
-  </div>
-</a>
+<button onclick="openPenghuni()" class="menu-card block w-full text-left bg-indigo-600 rounded-2xl p-4 shadow-lg">
+<div class="flex items-center gap-4">
+<div class="text-2xl">🏢</div>
+<div>
+<div class="font-semibold text-lg">Informasi Rusunawa</div>
+<div class="text-indigo-100 text-sm">untuk Pengelola</div>
+</div>
+</div>
+</button>
 
-<a href="https://sirab-daftar-2026.vercel.app/publik" target="_blank"
-class="menu-card block bg-emerald-600 rounded-2xl p-4 shadow-lg">
-  <div class="flex items-center gap-4">
-    <div class="text-2xl">📝</div>
-    <div>
-      <div class="font-semibold text-lg">Monitoring Pendaftaran</div>
-      <div class="text-emerald-100 text-sm">Status & verifikasi</div>
-    </div>
-  </div>
-</a>
+<button onclick="openDaftar()" class="menu-card block w-full text-left bg-emerald-600 rounded-2xl p-4 shadow-lg">
+<div class="flex items-center gap-4">
+<div class="text-2xl">📝</div>
+<div>
+<div class="font-semibold text-lg">Monitoring Pendaftaran</div>
+<div class="text-emerald-100 text-sm">Status & verifikasi</div>
+</div>
+</div>
+</button>
 
-<a href="https://sirab-aduan-2026.vercel.app/publik" target="_blank"
-class="menu-card block bg-rose-600 rounded-2xl p-4 shadow-lg">
-  <div class="flex items-center gap-4">
-    <div class="text-2xl">📢</div>
-    <div>
-      <div class="font-semibold text-lg">Monitoring Pengaduan</div>
-      <div class="text-rose-100 text-sm">Data laporan aduan</div>
-    </div>
-  </div>
-</a>
+<button onclick="openAduan()" class="menu-card block w-full text-left bg-rose-600 rounded-2xl p-4 shadow-lg">
+<div class="flex items-center gap-4">
+<div class="text-2xl">📢</div>
+<div>
+<div class="font-semibold text-lg">Monitoring Pengaduan</div>
+<div class="text-rose-100 text-sm">Data laporan aduan</div>
+</div>
+</div>
+</button>
 
-<a href="https://tgk-rusun-2026.vercel.app/" target="_blank"
-class="menu-card block bg-amber-600 rounded-2xl p-4 shadow-lg">
-  <div class="flex items-center gap-4">
-    <div class="text-2xl">💰</div>
-    <div>
-      <div class="font-semibold text-lg">Monitoring Tunggakan</div>
-      <div class="text-amber-100 text-sm">Data tunggakan sewa</div>
-    </div>
-  </div>
-</a>
+<button onclick="openKerja()" class="menu-card block w-full text-left bg-purple-600 rounded-2xl p-4 shadow-lg">
+<div class="flex items-center gap-4">
+<div class="text-2xl">📊</div>
+<div>
+<div class="font-semibold text-lg">Monitoring Kertas Kerja</div>
+<div class="text-purple-100 text-sm">Data pembayaran sewa</div>
+</div>
+</div>
+</button>
 
-<a href="https://kk-terima-2026.vercel.app/" target="_blank"
-class="menu-card block bg-purple-600 rounded-2xl p-4 shadow-lg">
-  <div class="flex items-center gap-4">
-    <div class="text-2xl">📊</div>
-    <div>
-      <div class="font-semibold text-lg">Monitoring Kertas Kerja</div>
-      <div class="text-purple-100 text-sm">Data pembayaran sewa</div>
-    </div>
-  </div>
-</a>
-
-<a href="https://sirab-kawe-2026.vercel.app/pdam" target="_blank"
-class="menu-card block bg-cyan-600 rounded-2xl p-4 shadow-lg">
-  <div class="flex items-center gap-4">
-    <div class="text-2xl">🚰</div>
-    <div>
-      <div class="font-semibold text-lg">Monitoring Meter PDAM</div>
-      <div class="text-cyan-100 text-sm">Rekap pembacaan meter</div>
-    </div>
-  </div>
-</a>
-
-<a href="https://docs.google.com/forms/d/e/1FAIpQLSehU1yuZTF3Uq-knjpf4YM0yxhp9TUtevnprg92Z2_FzW8rRQ/viewform?usp=dialog" target="_blank"
-class="menu-card block bg-slate-700 rounded-2xl p-4 shadow-lg">
-  <div class="flex items-center gap-4">
-    <div class="text-2xl">📄</div>
-    <div>
-      <div class="font-semibold text-lg">Catat Meter (G-Form)</div>
-      <div class="text-slate-300 text-sm">Input manual</div>
-    </div>
-  </div>
-</a>
-
-<a href="https://sirab-pdam-2026.vercel.app/petugas" target="_blank"
-class="menu-card block bg-teal-600 rounded-2xl p-4 shadow-lg">
-  <div class="flex items-center gap-4">
-    <div class="text-2xl">🧪</div>
-    <div>
-      <div class="font-semibold text-lg">Catat Meter (Uji Coba)</div>
-      <div class="text-teal-100 text-sm">Versi pengembangan</div>
-    </div>
-  </div>
-</a>
+<button onclick="openPDAM()" class="menu-card block w-full text-left bg-cyan-600 rounded-2xl p-4 shadow-lg">
+<div class="flex items-center gap-4">
+<div class="text-2xl">🚰</div>
+<div>
+<div class="font-semibold text-lg">Monitoring Meter PDAM</div>
+<div class="text-cyan-100 text-sm">Rekap pembacaan meter</div>
+</div>
+</div>
+</button>
 
 </div>
 
 <div class="mt-10 text-center text-slate-500 text-xs">
 © 2026 Sistem Informasi Rusunawa Kawe
 </div>
-
 </div>
 
 <!-- ================= POPUP FORM ADMIN ================= -->
@@ -185,18 +154,167 @@ class="fixed inset-0 bg-black/60 hidden flex items-end justify-center z-50 px-3"
   </div>
 </div>
 
-<script>
-function openAdmin(){
-  const m=document.getElementById("modalAdmin");
-  m.classList.remove("hidden");
-  m.classList.add("flex");
-}
-function closeAdmin(){
-  const m=document.getElementById("modalAdmin");
-  m.classList.add("hidden");
-  m.classList.remove("flex");
-}
-</script>
+<!-- ================= POPUP PENGHUNI ================= -->
+<div id="modalPenghuni"
+class="fixed inset-0 bg-black/60 hidden flex items-end justify-center z-50 px-3">
 
+  <div class="w-full max-w-md mx-auto bg-slate-900 rounded-2xl p-5 border border-slate-700 shadow-2xl mb-4">
+
+    <div class="text-center mb-4">
+      <div class="text-lg font-semibold">Info Rusunawa</div>
+      <div class="text-slate-400 text-sm">untuk pengelola</div>
+    </div>
+
+    <div class="space-y-3">
+
+      <a href="https://sirab-kawe-2026.vercel.app/" target="_blank"
+      class="block bg-indigo-600 rounded-xl p-3 text-center">Dashbord Rusunawa</a>      
+
+      <a href="https://rusun-bjm.vercel.app/" target="_blank"
+      class="block bg-blue-600 rounded-xl p-3 text-center">Cek Penghuni & Unit</a>
+
+      <a href="https://sirab-kawe-2026.vercel.app/login" target="_blank"
+      class="block bg-emerald-600 rounded-xl p-3 text-center">Dashbord Admin</a>
+
+    </div>
+
+    <button onclick="closePenghuni()"
+    class="mt-5 w-full bg-slate-800 rounded-xl p-3">Tutup</button>
+
+  </div>
+</div>
+
+<!-- =============== POPUP PENDAFTARAN =============== -->
+<div id="modalDaftar"
+class="fixed inset-0 bg-black/60 hidden flex items-end justify-center z-50 px-3">
+
+  <div class="w-full max-w-md mx-auto bg-slate-900 rounded-2xl p-5 border border-slate-700 shadow-2xl mb-4">
+
+    <div class="text-center mb-4">
+      <div class="text-lg font-semibold">Monitoring Pendaftaran</div>
+      <div class="text-slate-400 text-sm">status dan verifikasi</div>
+    </div>
+
+    <div class="space-y-3">
+
+      <a href="https://sirab-daftar-2026.vercel.app/admin-daftar" target="_blank"
+      class="block bg-blue-600 rounded-xl p-3 text-center">Dashbord Admin</a>
+
+      <a href="https://sirab-daftar-2026.vercel.app/publik" target="_blank"
+      class="block bg-indigo-600 rounded-xl p-3 text-center">Daftar Permohonan</a>
+
+    </div>
+
+    <button onclick="closeDaftar()"
+    class="mt-5 w-full bg-slate-800 rounded-xl p-3">Tutup</button>
+
+  </div>
+</div>
+
+<!-- =============== POPUP PENGADUAN =============== -->
+<div id="modalAduan"
+class="fixed inset-0 bg-black/60 hidden flex items-end justify-center z-50 px-3">
+
+  <div class="w-full max-w-md mx-auto bg-slate-900 rounded-2xl p-5 border border-slate-700 shadow-2xl mb-4">
+
+    <div class="text-center mb-4">
+      <div class="text-lg font-semibold">Layanan Pengaduan</div>
+      <div class="text-slate-400 text-sm">Data laporan Pengaduan</div>
+    </div>
+
+    <div class="space-y-3">
+
+      <a href="https://sirab-aduan-2026.vercel.app/admin" target="_blank"
+      class="block bg-blue-600 rounded-xl p-3 text-center">Dashbord Admin</a>
+
+      <a href="https://sirab-aduan-2026.vercel.app/publik" target="_blank"
+      class="block bg-indigo-600 rounded-xl p-3 text-center">Daftar Aduan</a>
+
+    </div>
+
+    <button onclick="closeAduan()"
+    class="mt-5 w-full bg-slate-800 rounded-xl p-3">Tutup</button>
+
+  </div>
+</div>
+
+<!-- =============== POPUP KEUANGAN =============== -->
+<div id="modalKerja"
+class="fixed inset-0 bg-black/60 hidden flex items-end justify-center z-50 px-3">
+
+  <div class="w-full max-w-md mx-auto bg-slate-900 rounded-2xl p-5 border border-slate-700 shadow-2xl mb-4">
+
+    <div class="text-center mb-4">
+      <div class="text-lg font-semibold">Monitoring Kertas Kerja</div>
+      <div class="text-slate-400 text-sm">Data Pembayaran & Tunggakan</div>
+    </div>
+
+    <div class="space-y-3">
+
+      <a href="https://kk-terima-2026.vercel.app/" target="_blank"
+      class="block bg-rose-600 rounded-xl p-3 text-center">Kertas Kerja 2026</a>
+
+      <a href="https://tgk-rusun-2026.vercel.app/" target="_blank"
+      class="block bg-emerald-600 rounded-xl p-3 text-center">Tunggakan 2026</a>
+
+      <a href="https://kk-terima-2025.vercel.app/" target="_blank"
+      class="block bg-blue-600 rounded-xl p-3 text-center">Kertas Kerja 2025</a>
+
+      <a href="https://tgk-rusun-2025.vercel.app/" target="_blank"
+      class="block bg-indigo-600 rounded-xl p-3 text-center">Tunggakan 2025</a>
+
+
+    </div>
+
+    <button onclick="closeKerja()"
+    class="mt-5 w-full bg-slate-800 rounded-xl p-3">Tutup</button>
+
+  </div>
+</div>
+
+<!-- =============== POPUP PDAM =============== -->
+<div id="modalPDAM"
+class="fixed inset-0 bg-black/60 hidden flex items-end justify-center z-50 px-3">
+
+  <div class="w-full max-w-md mx-auto bg-slate-900 rounded-2xl p-5 border border-slate-700 shadow-2xl mb-4">
+
+    <div class="text-center mb-4">
+      <div class="text-lg font-semibold">Monitoring PDAM</div>
+      <div class="text-slate-400 text-sm">Informasi dan Input Meter </div>
+    </div>
+
+    <div class="space-y-3">
+
+      <a href="https://sirab-kawe-2026.vercel.app/pdam" target="_blank"
+      class="block bg-blue-600 rounded-xl p-3 text-center">Monitoring Data Meter PDAM</a>
+
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSehU1yuZTF3Uq-knjpf4YM0yxhp9TUtevnprg92Z2_FzW8rRQ/viewform" target="_blank"
+      class="block bg-indigo-600 rounded-xl p-3 text-center">Catat Meter [G-Form]</a>
+
+      <a href="https://sirab-pdam-2026.vercel.app/" target="_blank"
+      class="block bg-black/60 rounded-xl p-3 text-center">[Pengembangan]Login Admin & Petugas</a>
+
+    </div>
+
+    <button onclick="closePDAM()"
+    class="mt-5 w-full bg-slate-800 rounded-xl p-3">Tutup</button>
+
+  </div>
+</div>
+
+<script>
+function openAdmin(){document.getElementById("modalAdmin").classList.replace("hidden","flex");}
+function closeAdmin(){document.getElementById("modalAdmin").classList.replace("flex","hidden");}
+function openPenghuni(){document.getElementById("modalPenghuni").classList.replace("hidden","flex");}
+function closePenghuni(){document.getElementById("modalPenghuni").classList.replace("flex","hidden");}
+function openDaftar(){document.getElementById("modalDaftar").classList.replace("hidden","flex");}
+function closeDaftar(){document.getElementById("modalDaftar").classList.replace("flex","hidden");}
+function openAduan(){document.getElementById("modalAduan").classList.replace("hidden","flex");}
+function closeAduan(){document.getElementById("modalAduan").classList.replace("flex","hidden");}
+function openKerja(){document.getElementById("modalKerja").classList.replace("hidden","flex");}
+function closeKerja(){document.getElementById("modalKerja").classList.replace("flex","hidden");}
+function openPDAM(){document.getElementById("modalPDAM").classList.replace("hidden","flex");}
+function closePDAM(){document.getElementById("modalPDAM").classList.replace("flex","hidden");}
+</script>
 </body>
 </html>
