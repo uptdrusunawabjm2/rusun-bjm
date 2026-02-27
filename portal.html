@@ -11,6 +11,7 @@
 <meta name="theme-color" content="#020617">
 
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
 body { min-height:100svh; }
@@ -137,23 +138,23 @@ class="fixed inset-0 bg-black/60 hidden flex items-end justify-center z-50 px-3"
 
     <div class="space-y-3">
 
-      <a href="https://sirab-daftar-2026.vercel.app/" target="_blank"
-      class="block bg-blue-600 rounded-xl p-3 text-center">Form Pendaftaran</a>
+      <button onclick="openLinkAction('https://sirab-daftar-2026.vercel.app/')"
+      class="block w-full bg-blue-600 rounded-xl p-3 text-center">Form Pendaftaran</button>
 
-      <a href="https://sirab-daftar-2026.vercel.app/tracking" target="_blank"
-      class="block bg-yellow-600 rounded-xl p-3 text-center">Tracking Pendaftaran</a>
+      <button onclick="openLinkAction('https://sirab-daftar-2026.vercel.app/tracking')"
+      class="block w-full bg-yellow-600 rounded-xl p-3 text-center">Tracking Pendaftaran</button>
 
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScSWFZRazmtbYhIW-yiJloUCxcCFOE8kGY1uD9aT0VDWE6rFQ/viewform" target="_blank"
-      class="block bg-indigo-600 rounded-xl p-3 text-center">Form Perpanjangan Sewa</a>
+      <button onclick="openLinkAction('https://docs.google.com/forms/d/e/1FAIpQLScSWFZRazmtbYhIW-yiJloUCxcCFOE8kGY1uD9aT0VDWE6rFQ/viewform')"
+      class="block w-full bg-indigo-600 rounded-xl p-3 text-center">Form Perpanjangan Sewa</button>
 
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfNCNNtUYzzRivZl3ZVPXAsS0NqtKUiHVF-D3dx3sB7FfOGdw/viewform" target="_blank"
-      class="block bg-emerald-600 rounded-xl p-3 text-center">Form Permohonan Pindah</a>
+      <button onclick="openLinkAction('https://docs.google.com/forms/d/e/1FAIpQLSfNCNNtUYzzRivZl3ZVPXAsS0NqtKUiHVF-D3dx3sB7FfOGdw/viewform')"
+      class="block w-full bg-emerald-600 rounded-xl p-3 text-center">Form Permohonan Pindah</button>
 
-      <a href="https://sirab-aduan-2026.vercel.app/form" target="_blank"
-      class="block bg-rose-600 rounded-xl p-3 text-center">Layanan Pengaduan</a>
+      <button onclick="openLinkAction('https://sirab-aduan-2026.vercel.app/form')"
+      class="block w-full bg-rose-600 rounded-xl p-3 text-center">Layanan Pengaduan</button>
 
-      <a href="https://sirab-penghuni.vercel.app/login-penghuni" target="_blank"
-      class="block bg-violet-600 rounded-xl p-3 text-center">Login Penghuni</a>
+      <button onclick="openLinkAction('https://sirab-penghuni.vercel.app/login-penghuni')"
+      class="block w-full bg-violet-600 rounded-xl p-3 text-center">Login Penghuni</button>
 
     </div>
 
@@ -311,7 +312,70 @@ class="fixed inset-0 bg-black/60 hidden flex items-end justify-center z-50 px-3"
   </div>
 </div>
 
+<!-- ===== POPUP AKSI LINK ===== -->
+<div id="modalLinkAction"
+class="fixed inset-0 bg-black/70 hidden flex items-center justify-center z-[60] px-4">
+
+  <div class="w-full max-w-sm bg-slate-900 rounded-2xl p-5 border border-slate-700 shadow-2xl">
+
+    <div class="text-center mb-4">
+      <div class="text-lg font-semibold">Aksi Link</div>
+      <div class="text-slate-400 text-sm break-all" id="linkPreviewText"></div>
+    </div>
+
+    <div id="qrcodePreview" class="flex justify-center mb-4"></div>
+
+    <div class="space-y-3">
+
+      <button onclick="copyLink()" 
+      class="w-full bg-emerald-600 rounded-xl p-3">Salin URL</button>
+
+      <button onclick="openDirectLink()" 
+      class="w-full bg-blue-600 rounded-xl p-3">Buka Link</button>
+
+      <button onclick="closeLinkAction()" 
+      class="w-full bg-slate-800 rounded-xl p-3">Tutup</button>
+
+    </div>
+  </div>
+</div>
+
 <script>
+let selectedLink = "";
+
+function openLinkAction(url){
+  selectedLink = url;
+  document.getElementById("modalLinkAction").classList.replace("hidden","flex");
+  document.getElementById("linkPreviewText").innerText = url;
+  generateQR(url);
+}
+
+function closeLinkAction(){
+  document.getElementById("modalLinkAction").classList.replace("flex","hidden");
+  document.getElementById("qrcodePreview").innerHTML = "";
+}
+
+function copyLink(){
+  navigator.clipboard.writeText(selectedLink);
+  alert("URL berhasil disalin");
+}
+
+function openDirectLink(){
+  window.open(selectedLink, "_blank");
+}
+
+function generateQR(text){
+  const container = document.getElementById("qrcodePreview");
+  container.innerHTML = "";
+  new QRCode(container,{
+    text:text,
+    width:180,
+    height:180,
+    correctLevel:QRCode.CorrectLevel.H
+  });
+}
+
+/* ==== Modal Lama ==== */
 function openAdmin(){document.getElementById("modalAdmin").classList.replace("hidden","flex");}
 function closeAdmin(){document.getElementById("modalAdmin").classList.replace("flex","hidden");}
 function openPenghuni(){document.getElementById("modalPenghuni").classList.replace("hidden","flex");}
@@ -325,5 +389,6 @@ function closeKerja(){document.getElementById("modalKerja").classList.replace("f
 function openPDAM(){document.getElementById("modalPDAM").classList.replace("hidden","flex");}
 function closePDAM(){document.getElementById("modalPDAM").classList.replace("flex","hidden");}
 </script>
+
 </body>
 </html>
