@@ -588,23 +588,19 @@ function showPopup(unit){
     </div>
 
     <div class="popup-section">
-      <div class="popup-title">Riwayat Perjanjian</div>
-      ${
-        perjanjian.length
-        ? `<div class="popup-grid">
-            ${perjanjian.map(p=>`
-              <div class="popup-item">
+        <div class="popup-title">Riwayat Perjanjian</div>
+        ${
+            perjanjian
+            ? `<div class="popup-item">
                 <span>No Perjanjian</span>
-                ${p.no_perjanjian_penghuni||"-"}<br>
+                ${perjanjian.no_perjanjian_penghuni||"-"}<br>
                 <span>Mulai</span>
-                ${p.tgl_perjanjian_mulai_penghuni||"-"}<br>
+                ${perjanjian.tgl_perjanjian_mulai_penghuni||"-"}<br>
                 <span>Akhir</span>
-                ${p.tgl_perjanjian_akhir_penghuni||"-"}
-              </div>
-            `).join("")}
-           </div>`
-        : `<div class="popup-item">Tidak ada data</div>`
-      }
+                ${perjanjian.tgl_perjanjian_akhir_penghuni||"-"}
+            </div>`
+            : `<div class="popup-item">Tidak ada data</div>`
+        }
     </div>
 
     <div class="popup-section">
