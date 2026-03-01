@@ -628,7 +628,12 @@ function showPopup(unit){
     <div class="pdam-box">
         ${
           Object.entries(d.pdamSampah)
-          .filter(([k,v])=>k!=="unit" && v)
+          .filter(([k,v]) =>
+            k !== "unit" &&
+            k !== "total pdam" &&
+            k !== "total sampah" &&
+            v
+            )
             .map(([k,v])=>{
             let value = v ?? "-";
             const key = String(k).toLowerCase().trim();
