@@ -79,6 +79,85 @@ color:#93c5fd;
 text-decoration:underline;
 }
 
+/* ================= POPUP BASE ================= */
+
+.popup-overlay{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.6);
+z-index:9999;
+align-items:center;
+justify-content:center;
+}
+
+.popup-card{
+background:#1e293b;
+width:95%;
+max-width:520px;
+max-height:85vh;
+overflow:auto;
+border-radius:16px;
+padding:18px;
+position:relative;
+color:#e2e8f0;
+}
+
+.popup-close{
+position:absolute;
+top:8px;
+right:10px;
+background:#ef4444;
+border:none;
+color:#fff;
+font-size:16px;
+padding:4px 10px;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* ================= ULTRA COMPACT MOBILE ================= */
+
+@media (max-width:720px){
+
+.popup-overlay{
+align-items:flex-end;
+}
+
+.popup-card{
+width:100%;
+max-width:none;
+height:75vh;
+max-height:none;
+border-radius:16px 16px 0 0;
+padding:14px;
+font-size:13px;
+}
+
+.popup-card h3{
+font-size:16px;
+margin-bottom:8px;
+}
+
+.popup-card p{
+margin:4px 0;
+line-height:1.3;
+}
+
+.popup-card h4{
+margin-top:10px;
+font-size:14px;
+}
+
+.popup-close{
+top:6px;
+right:8px;
+padding:3px 8px;
+font-size:14px;
+}
+
+}
+
 /* ================= MOBILE RESPONSIVE ================= */
 
 @media (max-width: 720px){
@@ -355,20 +434,20 @@ function showPopup(unit){
   if(!d) return alert("Data tidak ditemukan");
 
   document.getElementById("popupContent").innerHTML = `
-    <h3 style="margin-top:0">${d.unit.toUpperCase()}</h3>
-    <p><b>Nama:</b> ${d.nama||"-"}</p>
-    <p><b>NIK:</b> ${d.nik||"-"}</p>
-    <p><b>Telp:</b> ${d.telp||"-"}</p>
-    <p><b>Alamat:</b> ${d.alamat||"-"}</p>
-    <p><b>Kondisi:</b> ${d.kondisiunit||"-"}</p>
+    <h3>${d.unit.toUpperCase()}</h3>
 
-    <hr>
+    <p><b>${d.nama||"-"}</b></p>
+    <p>NIK: ${d.nik||"-"}</p>
+    <p>Telp: ${d.telp||"-"}</p>
+    <p>${d.kondisiunit||"-"}</p>
 
-    <h4>Riwayat Penghuni</h4>
+    <hr style="border:0;border-top:1px solid #334155;margin:8px 0;">
+
+    <h4>Riwayat</h4>
     ${
       (d.riwayatNamaPenghuni||[])
-      .map(n=>`<div>- ${n}</div>`)
-      .join("") || "Tidak ada data"
+      .map(n=>`<div style="font-size:12px;opacity:.85">• ${n}</div>`)
+      .join("") || "<div style='font-size:12px;opacity:.6'>Tidak ada data</div>"
     }
   `;
 
@@ -382,9 +461,9 @@ function closePopup(){
 load();
 
 </script>
-<div id="popup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);align-items:center;justify-content:center;z-index:9999">
-  <div style="background:#1e293b;padding:20px;border-radius:16px;max-width:600px;width:95%;max-height:85vh;overflow:auto;color:#e2e8f0;position:relative">
-    <button onclick="closePopup()" style="position:absolute;top:10px;right:10px;background:#ef4444;border:none;padding:6px 10px;border-radius:8px;color:#fff;cursor:pointer">X</button>
+<div id="popup" class="popup-overlay">
+  <div class="popup-card">
+    <button class="popup-close" onclick="closePopup()">×</button>
     <div id="popupContent"></div>
   </div>
 </div>
