@@ -527,7 +527,18 @@ function showPopup(unit){
   const totalBayar = Number(d.pembayaran||0);
   const totalTunggakan = Number(d.tunggakan||0);
 
-  const perjanjian = (d.riwayatPerjanjian||[]);
+  const semuaPerjanjian = (d.riwayatPerjanjian||[]);
+    let perjanjianAktif = null;
+    const today = new Date();
+    for(const p of semuaPerjanjian){
+    const mulai = new Date(p.tgl_perjanjian_mulai_penghuni||0);
+    const akhir = new Date(p.tgl_perjanjian_akhir_penghuni||0);
+    if(mulai && akhir && today >= mulai && today <= akhir){
+        perjanjianAktif = p;
+        break;
+    }
+    }
+    const perjanjian = perjanjianAktif || semuaPerjanjian[0] || null;
 
   document.getElementById("popupContent").innerHTML = `
 
