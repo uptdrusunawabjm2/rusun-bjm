@@ -131,6 +131,40 @@ border-radius:10px;
 line-height:1.3;
 }
 
+/* ================= FINANCIAL CARD ================= */
+
+.popup-finance{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:6px;
+}
+
+.finance-box{
+padding:10px;
+border-radius:12px;
+text-align:center;
+font-size:13px;
+font-weight:600;
+}
+
+.finance-paid{
+background:#064e3b;
+color:#34d399;
+}
+
+.finance-due{
+background:#7f1d1d;
+color:#f87171;
+}
+
+@media (max-width:720px){
+.popup-finance{
+grid-template-columns:1fr;
+gap:8px;
+}
+}
+
 .popup-item span{
 display:block;
 font-size:11px;
@@ -490,6 +524,11 @@ function showPopup(unit){
   const anggota = [d.anggota1,d.anggota2,d.anggota3,d.anggota4]
     .filter(a=>a && String(a).trim()!=="");
 
+  const totalBayar = Number(d.pembayaran||0);
+  const totalTunggakan = Number(d.tunggakan||0);
+
+  const perjanjian = (d.riwayatPerjanjian||[]);
+
   document.getElementById("popupContent").innerHTML = `
 
     <div class="popup-section">
@@ -521,6 +560,40 @@ function showPopup(unit){
         <div class="popup-item"><span>Nama</span>${d.penjamin||"-"}</div>
         <div class="popup-item"><span>Telp</span>${d.telpPenjamin||"-"}</div>
         </div>
+    </div>
+
+        <div class="popup-section">
+      <div class="popup-title">Total Pembayaran & Tunggakan</div>
+      <div class="popup-finance">
+        <div class="finance-box finance-paid">
+          Total Bayar<br>
+          Rp ${totalBayar.toLocaleString("id-ID")}
+        </div>
+        <div class="finance-box finance-due">
+          Total Tunggakan<br>
+          Rp ${totalTunggakan.toLocaleString("id-ID")}
+        </div>
+      </div>
+    </div>
+
+    <div class="popup-section">
+      <div class="popup-title">Riwayat Perjanjian</div>
+      ${
+        perjanjian.length
+        ? `<div class="popup-grid">
+            ${perjanjian.map(p=>`
+              <div class="popup-item">
+                <span>No Perjanjian</span>
+                ${p.no_perjanjian_penghuni||"-"}<br>
+                <span>Mulai</span>
+                ${p.tgl_perjanjian_mulai_penghuni||"-"}<br>
+                <span>Akhir</span>
+                ${p.tgl_perjanjian_akhir_penghuni||"-"}
+              </div>
+            `).join("")}
+           </div>`
+        : `<div class="popup-item">Tidak ada data</div>`
+      }
     </div>
 
     <div class="popup-section">
