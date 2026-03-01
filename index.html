@@ -618,6 +618,7 @@ function showPopup(unit){
           .filter(([k,v])=>k!=="unit" && v)
           .map(([k,v])=>{
             let value = v ?? "-";
+            const key = String(k).toLowerCase().trim();
             if(
                 k.includes("pdam_jlh_uang") ||
                 k.includes("total_pdam") ||
