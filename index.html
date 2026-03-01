@@ -71,6 +71,13 @@ font-weight:600;
 letter-spacing:.4px;
 }
 
+.unit-link{
+cursor:pointer;
+color:#93c5fd;
+}
+.unit-link:hover{
+text-decoration:underline;
+}
 
 /* ================= MOBILE RESPONSIVE ================= */
 
@@ -234,6 +241,7 @@ const GAS_URL="https://script.google.com/macros/s/AKfycbzjABRVgRaoMj3Y1gCU_DRJpn
 const CACHE_KEY="RUSUN_CACHE_V3";
 
 let RAW=[],VIEW=[];
+let INTERNAL_MAP = {};
 
 async function load(){
 try{
@@ -248,6 +256,13 @@ const json=await res.json();
 if(!json.status)return;
 
 const rows=json?.data?.data||[];
+
+// simpan full data internal untuk popup
+(rows || []).forEach(r=>{
+  if(r.unit){
+    INTERNAL_MAP[String(r.unit).toLowerCase()] = r;
+  }
+});
 
 RAW=rows.map(r=>({
 Unit:String(r.unit||r["No. Unit"]||r.Unit||"").trim(),
@@ -289,7 +304,11 @@ if(k.includes("terisi"))cls="occupied";
 else if(k.includes("rusak"))cls="broken";
 
 html+=`<tr>
-<td>${d.Unit.toUpperCase()}</td>
+<td>
+  <span class="unit-link" data-unit="${d.Unit.toLowerCase()}">
+    ${d.Unit.toUpperCase()}
+  </span>
+</td>
 <td>${d.Nama}</td>
 <td>${d.Telp}</td>
 <td><span class="badge ${cls}">${d["Kondisi Unit"]}</span></td>
@@ -324,7 +343,50 @@ VIEW=RAW;
 render();
 };
 
+document.addEventListener("click",function(e){
+  if(e.target.classList.contains("unit-link")){
+    const unit = e.target.dataset.unit.toLowerCase();
+    showPopup(unit);
+  }
+});
+
+function showPopup(unit){
+  const d = INTERNAL_MAP[unit];
+  if(!d) return alert("Data tidak ditemukan");
+
+  document.getElementById("popupContent").innerHTML = `
+    <h3 style="margin-top:0">${d.unit.toUpperCase()}</h3>
+    <p><b>Nama:</b> ${d.nama||"-"}</p>
+    <p><b>NIK:</b> ${d.nik||"-"}</p>
+    <p><b>Telp:</b> ${d.telp||"-"}</p>
+    <p><b>Alamat:</b> ${d.alamat||"-"}</p>
+    <p><b>Kondisi:</b> ${d.kondisiunit||"-"}</p>
+
+    <hr>
+
+    <h4>Riwayat Penghuni</h4>
+    ${
+      (d.riwayatNamaPenghuni||[])
+      .map(n=>`<div>- ${n}</div>`)
+      .join("") || "Tidak ada data"
+    }
+  `;
+
+  document.getElementById("popup").style.display="flex";
+}
+
+function closePopup(){
+  document.getElementById("popup").style.display="none";
+}
+
 load();
+
 </script>
+<div id="popup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);align-items:center;justify-content:center;z-index:9999">
+  <div style="background:#1e293b;padding:20px;border-radius:16px;max-width:600px;width:95%;max-height:85vh;overflow:auto;color:#e2e8f0;position:relative">
+    <button onclick="closePopup()" style="position:absolute;top:10px;right:10px;background:#ef4444;border:none;padding:6px 10px;border-radius:8px;color:#fff;cursor:pointer">X</button>
+    <div id="popupContent"></div>
+  </div>
+</div>
 </body>
 </html>
