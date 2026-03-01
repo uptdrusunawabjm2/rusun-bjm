@@ -547,6 +547,8 @@ function showPopup(unit){
 
   const totalBayar = Number(d.pembayaran||0);
   const totalTunggakan = Number(d.tunggakan||0);
+  const totalPdam = Number(String(d.pdamSampah?.["total pdam"] || 0).replace(/[^\d]/g,""));
+  const totalSampah = Number(String(d.pdamSampah?.["total sampah"] || 0).replace(/[^\d]/g,""));
 
   const semuaPerjanjian = (d.riwayatPerjanjian||[]);
     let perjanjianAktif = null;
@@ -612,7 +614,18 @@ function showPopup(unit){
   <div class="popup-title">Riwayat Tunggakan PDAM & Sampah</div>
   ${
     d.pdamSampah && Object.keys(d.pdamSampah).length
-    ? `<div class="pdam-box">
+    ? `
+    <div class="popup-finance">
+    <div class="finance-box finance-paid">
+        Total PDAM<br>
+        Rp ${totalPdam.toLocaleString("id-ID")}
+    </div>
+    <div class="finance-box finance-due">
+        Total Sampah<br>
+        Rp ${totalSampah.toLocaleString("id-ID")}
+    </div>
+    </div>
+    <div class="pdam-box">
         ${
           Object.entries(d.pdamSampah)
           .filter(([k,v])=>k!=="unit" && v)
