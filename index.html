@@ -616,12 +616,24 @@ function showPopup(unit){
         ${
           Object.entries(d.pdamSampah)
           .filter(([k,v])=>k!=="unit" && v)
-          .map(([k,v])=>`
-            <div class="pdam-row">
-              <div class="pdam-label">${k}</div>
-              <div>${v}</div>
-            </div>
-          `).join("")
+          .map(([k,v])=>{
+            let value = v ?? "-";
+            if(
+                k === "pdam_jlh_uang" ||
+                k === "total_pdam" ||
+                k === "sampah_jlh_uang" ||
+                k === "total_sampah"
+            ){
+                const num = Number(value || 0);
+                value = "Rp " + num.toLocaleString("id-ID");
+            }
+            return `
+                <div class="pdam-row">
+                <div class="pdam-label">${k}</div>
+                <div>${value}</div>
+                </div>
+            `;
+            }).join("")
         }
        </div>`
     : `<div class="popup-item">Tidak ada data</div>`
