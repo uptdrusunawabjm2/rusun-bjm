@@ -179,6 +179,20 @@ background:#7f1d1d;
 color:#f87171;
 }
 
+/* ================= PDAM TOTAL CUSTOM ================= */
+
+.finance-pdam{
+background:#0c4a6e;      /* biru tua */
+color:#38bdf8;           /* biru terang */
+}
+
+.finance-sampah{
+background:#3f1d7a;      /* ungu tua */
+color:#c084fc;           /* ungu terang */
+}
+
+/* ================================== */
+
 @media (max-width:720px){
 .popup-finance{
 grid-template-columns:1fr;
@@ -616,11 +630,11 @@ function showPopup(unit){
     d.pdamSampah && Object.keys(d.pdamSampah).length
     ? `
     <div class="popup-finance">
-    <div class="finance-box finance-paid">
-        Total PDAM<br>
+    <div class="finance-box finance-pdam">
+      Total PDAM<br>
         Rp ${totalPdam.toLocaleString("id-ID")}
     </div>
-    <div class="finance-box finance-due">
+    <div class="finance-box finance-sampah">
         Total Sampah<br>
         Rp ${totalSampah.toLocaleString("id-ID")}
     </div>
