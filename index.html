@@ -131,6 +131,27 @@ border-radius:10px;
 line-height:1.3;
 }
 
+/* ================= PDAM SAMPAH ================= */
+
+.pdam-box{
+background:#111827;
+padding:10px;
+border-radius:12px;
+font-size:13px;
+line-height:1.4;
+}
+
+.pdam-row{
+display:flex;
+justify-content:space-between;
+margin-bottom:4px;
+}
+
+.pdam-label{
+opacity:.6;
+font-size:12px;
+}
+
 /* ================= FINANCIAL CARD ================= */
 
 .popup-finance{
@@ -586,6 +607,26 @@ function showPopup(unit){
         </div>
       </div>
     </div>
+
+    <div class="popup-section">
+  <div class="popup-title">Riwayat Tunggakan PDAM & Sampah</div>
+  ${
+    d.pdamSampah && Object.keys(d.pdamSampah).length
+    ? `<div class="pdam-box">
+        ${
+          Object.entries(d.pdamSampah)
+          .filter(([k,v])=>k!=="unit" && v)
+          .map(([k,v])=>`
+            <div class="pdam-row">
+              <div class="pdam-label">${k}</div>
+              <div>${v}</div>
+            </div>
+          `).join("")
+        }
+       </div>`
+    : `<div class="popup-item">Tidak ada data</div>`
+  }
+</div>
 
     <div class="popup-section">
         <div class="popup-title">Riwayat Perjanjian</div>
