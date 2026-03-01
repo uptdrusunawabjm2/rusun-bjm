@@ -620,10 +620,10 @@ function showPopup(unit){
             let value = v ?? "-";
             const key = String(k).toLowerCase().trim();
             if(
-                k.includes("pdam_jlh_uang") ||
-                k.includes("total_pdam") ||
-                k.includes("sampah_jlh_uang") ||
-                k.includes("total_sampah")
+                key.includes("pdam_jlh_uang") ||
+                key.includes("total_pdam") ||
+                key.includes("sampah_jlh_uang") ||
+                key.includes("total_sampah")
             ){
                 const num = Number(value || 0);
                 value = "Rp " + num.toLocaleString("id-ID");
