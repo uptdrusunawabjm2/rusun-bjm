@@ -616,18 +616,22 @@ function showPopup(unit){
         ${
           Object.entries(d.pdamSampah)
           .filter(([k,v])=>k!=="unit" && v)
-          .map(([k,v])=>{
+            .map(([k,v])=>{
+
             let value = v ?? "-";
             const key = String(k).toLowerCase().trim();
+
             if(
                 key.includes("pdam_jlh_uang") ||
                 key.includes("total_pdam") ||
                 key.includes("sampah_jlh_uang") ||
                 key.includes("total_sampah")
             ){
-                const num = Number(value || 0);
+                const cleaned = String(value).replace(/[^\d]/g,"");
+                const num = Number(cleaned || 0);
                 value = "Rp " + num.toLocaleString("id-ID");
             }
+
             return `
                 <div class="pdam-row">
                 <div class="pdam-label">${k}</div>
