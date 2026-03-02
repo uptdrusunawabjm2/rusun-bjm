@@ -665,24 +665,26 @@ function showPopup(unit){
             v
             )
             .map(([k,v])=>{
-            let value = v ?? "-";
-            const key = String(k).toLowerCase().trim();
-            if(
-                key.includes("jlh_uang") ||
-                key === "total pdam" ||
-                key === "total sampah"
-            ){
-                const cleaned = String(value).replace(/[^\d]/g,"");
-                const num = Number(cleaned || 0);
-                value = "Rp " + num.toLocaleString("id-ID");
-            }
-            return `
-                <div class="pdam-row">
-                <div class="pdam-label">${k}</div>
-                <div>${value}</div>
-                </div>
-            `;
-            }).join("")
+    let value = v ?? "-";
+    const key = String(k).toLowerCase().trim();
+
+    if(
+        key.includes("jlh_uang") ||
+        key === "total pdam" ||
+        key === "total sampah"
+    ){
+        const cleaned = String(value).replace(/[^\d]/g,"");
+        const num = Number(cleaned || 0);
+        value = "Rp " + num.toLocaleString("id-ID");
+    }
+
+    return `
+        <div class="pdam-row">
+            <div class="pdam-label">${k}</div>
+            <div>${value}</div>
+        </div>
+    `;
+}).join("")
         }
        </div>`
     : `<div class="popup-item">Tidak ada data</div>`
