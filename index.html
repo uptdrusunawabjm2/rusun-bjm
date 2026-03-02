@@ -92,15 +92,19 @@ justify-content:center;
 }
 
 .popup-card{
-background:#1e293b;
+background:linear-gradient(145deg,#1e293b,#111827);
 width:95%;
-max-width:520px;
-max-height:85vh;
+max-width:720px;
+max-height:88vh;
 overflow:auto;
-border-radius:16px;
-padding:18px;
+border-radius:22px;
+padding:24px;
 position:relative;
 color:#e2e8f0;
+border:1px solid rgba(255,255,255,.05);
+box-shadow:
+0 25px 60px rgba(0,0,0,.6),
+0 8px 20px rgba(0,0,0,.3);
 }
 
 /* ================= POPUP CARD CONTENT ================= */
@@ -461,7 +465,10 @@ setTimeout(()=>controller.abort(),8000);
 
 const res=await fetch(GAS_URL+"?action=internal&key=rusun2026",{signal:controller.signal});
 const json=await res.json();
-if(!json.status)return;
+if(!json.status){
+  console.error("GAS ERROR:", json);
+  return;
+}
 
 const rows=json?.data?.data||[];
 
