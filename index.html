@@ -452,57 +452,34 @@ let INTERNAL_MAP = {};
 
 async function load(){
 try{
-const cache=sessionStorage.getItem(CACHE_KEY);
-if(cache){
-  const parsed = JSON.parse(cache);
-  RAW = parsed.RAW;
-  INTERNAL_MAP = parsed.INTERNAL_MAP || {};
-  VIEW = RAW;
-  render();
-}
 
-const controller=new AbortController();
-setTimeout(()=>controller.abort(),8000);
-
-const res=await fetch(GAS_URL+"?action=list",{signal:controller.signal});
-const json=await res.json();
+const res = await fetch(GAS_URL+"?action=list");
+const json = await res.json();
 
 if(!json.status){
   console.error("GAS ERROR:", json);
-  RAW = [];
-  VIEW = [];
+  RAW=[];
+  VIEW=[];
   render();
   return;
 }
 
-const rows=json?.data||[];
+const rows = json.data || [];
 
-// simpan full data internal untuk popup
-(rows || []).forEach(r=>{
-  if(r.unit){
-    INTERNAL_MAP[String(r.unit).toLowerCase()] = r;
-  }
-});
-
-RAW=rows.map(r=>({
-Unit:String(r.unit||r["No. Unit"]||r.Unit||"").trim(),
-Nama:String(r.nama||r["Nama Penghuni"]||r.Nama||"").trim(),
-Telp:String(r.telp||r["Nomor Telp./HP"]||"").trim(),
-"Kondisi Unit":String(r.kondisiunit||r.kondisi||r["Kondisi Unit"]||"").trim()
+RAW = rows.map(r=>({
+  Unit: String(r.unit || "").trim(),
+  Nama: String(r.nama || "").trim(),
+  Telp: String(r.telp || "").trim(),
+  "Kondisi Unit": String(r.kondisiunit || "").trim()
 }));
 
 RAW.sort((a,b)=>a.Unit.localeCompare(b.Unit,undefined,{numeric:true}));
-sessionStorage.setItem(
-  CACHE_KEY,
-  JSON.stringify({
-    RAW: RAW,
-    INTERNAL_MAP: INTERNAL_MAP
-  })
-);
-VIEW=RAW;
+
+VIEW = RAW;
 render();
+
 }catch(e){
-if(e.name!=="AbortError")console.error(e);
+console.error("LOAD ERROR:",e);
 }
 }
 
