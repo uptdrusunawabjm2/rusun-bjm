@@ -464,7 +464,7 @@ if(cache){
 const controller=new AbortController();
 setTimeout(()=>controller.abort(),8000);
 
-const res=await fetch(GAS_URL+"?action=internal&key=rusun2026",{signal:controller.signal});
+const res=await fetch(GAS_URL+"?action=list",{signal:controller.signal});
 const json=await res.json();
 
 if(!json.status){
@@ -475,7 +475,7 @@ if(!json.status){
   return;
 }
 
-const rows=json?.data?.data||[];
+const rows=json?.data||[];
 
 // simpan full data internal untuk popup
 (rows || []).forEach(r=>{
@@ -576,9 +576,25 @@ document.addEventListener("click",function(e){
   }
 });
 
+function formatTanggal(t){
+  if(!t) return "-";
+
+  const d = new Date(t);
+  if(isNaN(d)) return "-";
+
+  return d.toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+}
+
 function showPopup(unit){
-  const d = INTERNAL_MAP[unit];
-  if(!d) return alert("Data tidak ditemukan");
+  fetch(GAS_URL+"?action=detail&key=rusun2026&unit="+unit)
+  .then(res=>res.json())
+  .then(json=>{
+  if(!json.status) return alert("Data tidak ditemukan");
+  const d = json.data;
 
   const anggota = [d.anggota1,d.anggota2,d.anggota3,d.anggota4]
     .filter(a=>a && String(a).trim()!=="");
@@ -704,9 +720,9 @@ function showPopup(unit){
                 <span>No Perjanjian</span>
                 ${perjanjian.no_perjanjian_penghuni||"-"}<br>
                 <span>Mulai</span>
-                ${perjanjian.tgl_perjanjian_mulai_penghuni||"-"}<br>
+                ${formatTanggal(perjanjian.tgl_perjanjian_mulai_penghuni)}<br>
                 <span>Akhir</span>
-                ${perjanjian.tgl_perjanjian_akhir_penghuni||"-"}
+                ${formatTanggal(perjanjian.tgl_perjanjian_akhir_penghuni)}
             </div>`
             : `<div class="popup-item">Tidak ada data</div>`
         }
