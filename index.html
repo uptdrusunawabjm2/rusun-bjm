@@ -454,10 +454,11 @@ try{
 const cache=sessionStorage.getItem(CACHE_KEY);
 if(cache){
   const parsed = JSON.parse(cache);
-  RAW = parsed.RAW;
+  RAW = parsed.RAW || [];
   INTERNAL_MAP = parsed.INTERNAL_MAP || {};
   VIEW = RAW;
   render();
+  return; // <-- TAMBAHKAN INI
 }
 
 const controller=new AbortController();
