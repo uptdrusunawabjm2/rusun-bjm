@@ -400,20 +400,23 @@ function closeKerja(){document.getElementById("modalKerja").classList.replace("f
 function openPDAM(){document.getElementById("modalPDAM").classList.replace("hidden","flex");}
 function closePDAM(){document.getElementById("modalPDAM").classList.replace("flex","hidden");}
 
-/* ===== AUTO OPEN POPUP ADMIN VIA URL ===== */
+/* ===== AUTO OPEN POPUP ADMIN (HANYA SEKALI) ===== */
 
 window.addEventListener("load",()=>{
 
 const params = new URLSearchParams(window.location.search);
 const menu = params.get("menu");
 
+/* jalankan hanya jika menu=admin */
+
 if(menu==="admin"){
 
 openAdmin();
 
-/* hapus parameter URL setelah popup terbuka */
+/* hapus parameter URL agar tidak terbaca lagi */
 
-history.replaceState(null,null,"portal.html");
+const cleanURL = window.location.origin + window.location.pathname;
+history.replaceState({}, document.title, cleanURL);
 
 }
 
