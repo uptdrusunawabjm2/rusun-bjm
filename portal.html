@@ -403,12 +403,20 @@ function closePDAM(){document.getElementById("modalPDAM").classList.replace("fle
 /* ===== AUTO OPEN POPUP ADMIN VIA URL ===== */
 
 window.addEventListener("load",()=>{
+
 const params = new URLSearchParams(window.location.search);
 const menu = params.get("menu");
 
 if(menu==="admin"){
+
 openAdmin();
+
+/* hapus parameter URL setelah popup terbuka */
+
+history.replaceState(null,null,"portal.html");
+
 }
+
 });
 </script>
 
