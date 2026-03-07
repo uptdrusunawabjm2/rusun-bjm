@@ -641,53 +641,24 @@ function showPopup(unit){
     </div>
 
     <div class="popup-section">
-  <div class="popup-title">Riwayat Tunggakan PDAM & Sampah</div>
-  ${
-    d.pdamSampah && Object.keys(d.pdamSampah).length
-    ? `
-    <div class="popup-finance">
-    <div class="finance-box finance-pdam">
-      Total PDAM<br>
-        Rp ${totalPdam.toLocaleString("id-ID")}
+      <div class="popup-title">Riwayat Tunggakan PDAM & Sampah</div>
+      ${
+        d.pdamSampah && Object.keys(d.pdamSampah).length
+        ? `
+        <div class="popup-finance">
+          <div class="finance-box finance-pdam">
+            Total PDAM<br>
+            Rp ${totalPdam.toLocaleString("id-ID")}
+          </div>
+          <div class="finance-box finance-sampah">
+            Total Sampah<br>
+            Rp ${totalSampah.toLocaleString("id-ID")}
+          </div>
+        </div>
+        `
+        : `<div class="popup-item">Tidak ada data</div>`
+      }
     </div>
-    <div class="finance-box finance-sampah">
-        Total Sampah<br>
-        Rp ${totalSampah.toLocaleString("id-ID")}
-    </div>
-    </div>
-    <div class="pdam-box">
-        ${
-          Object.entries(d.pdamSampah)
-          .filter(([k,v]) =>
-            k !== "unit" &&
-            k !== "total pdam" &&
-            k !== "total sampah" &&
-            v
-            )
-            .map(([k,v])=>{
-              let value = v ?? "-";
-              const key = String(k).toLowerCase().trim();
-              if(
-                  key.includes("jlh_uang") ||
-                  key === "total pdam" ||
-                  key === "total sampah"
-              ){
-                  const cleaned = String(value).replace(/[^\d]/g,"");
-                  const num = Number(cleaned || 0);
-                  value = "Rp " + num.toLocaleString("id-ID");
-              }
-              return `
-                  <div class="pdam-row">
-                      <div class="pdam-label">${k}</div>
-                      <div>${value}</div>
-                  </div>
-              `;
-          }).join("")
-        }
-       </div>`
-    : `<div class="popup-item">Tidak ada data</div>`
-  }
-</div>
 
     <div class="popup-section">
         <div class="popup-title">Riwayat Perjanjian</div>
